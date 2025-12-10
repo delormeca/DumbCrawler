@@ -1,0 +1,40 @@
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Output files (will be recreated)
+crawler/output_*/
+*.json
+
+# Documentation (not needed in container)
+*.md
+!requirements.txt
+
+# Environment files (mounted at runtime)
+.env
+.env.local
+
+# Scrapy stuff
+.scrapy/
+
+# Test files
+test_*.py
+
+# Claude configuration
+.claude/

@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  dumbcrawler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dumbcrawler
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
+      - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
+      - API_URL=${API_URL:-https://your-app.cloudflare.workers.dev}
+    volumes:
+      # Persist crawler output (optional, for debugging)
+      - crawler_output:/app/crawler/output
+    command: >
+      python crawler/crawler_watcher.py
+      --supabase-url ${VITE_SUPABASE_URL}
+      --supabase-key ${VITE_SUPABASE_ANON_KEY}
+      --api-url ${API_URL:-https://your-app.cloudflare.workers.dev}
+    # Resource limits (adjust based on your VPS)
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 4G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  crawler_output:
