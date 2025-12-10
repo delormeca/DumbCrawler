@@ -1,0 +1,35 @@
+{
+  "url": "https://httpbin.org/links/5/4",
+  "status_code": 200,
+  "depth": 1,
+  "referrer": "https://httpbin.org/links/5/0",
+  "raw_html": "<html><head><title>Links</title></head><body><a href='/links/5/0'>0</a> <a href='/links/5/1'>1</a> <a href='/links/5/2'>2</a> <a href='/links/5/3'>3</a> 4 </body></html>",
+  "metadata": {
+    "title": "Links",
+    "meta_description": null,
+    "h1": null
+  },
+  "request_headers": {
+    "Referer": "https://httpbin.org/links/5/0",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en",
+    "User-Agent": "DumbCrawler/1.0",
+    "Accept-Encoding": "gzip, deflate"
+  },
+  "response_headers": {
+    "Content-Length": "169",
+    "Date": "Wed, 26 Nov 2025 05:31:37 GMT",
+    "Content-Type": "text/html; charset=utf-8",
+    "Server": "gunicorn/19.9.0",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Credentials": "true"
+  },
+  "crawled_at": "2025-11-26T05:31:37.794224+00:00",
+  "crawler": {
+    "name": "DumbCrawler",
+    "version": "1.0",
+    "mode": "crawl",
+    "js_mode": "off",
+    "scope": "subdomain"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(del test_output.json output_job_001.jsonl)",
+      "Bash(python -m json.tool:*)",
+      "Bash(python run_crawl.py:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

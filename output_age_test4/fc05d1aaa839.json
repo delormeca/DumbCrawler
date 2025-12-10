@@ -1,0 +1,1290 @@
+{
+  "url": "https://blog.python.org/2024/10/python-3130-free-threading-experimental.html",
+  "status_code": 404,
+  "depth": 0,
+  "referrer": null,
+  "raw_html": "<!DOCTYPE html>\n<html class='v2' dir='ltr' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>\n<head>\n<link href='https://www.blogger.com/static/v1/widgets/4128112664-css_bundle_v2.css' rel='stylesheet' type='text/css'/>\n<script data-domain='pythoninsider.blogspot.com' defer='defer' src='https://analytics.python.org/js/script.outbound-links.js'></script>\n<link href='https://blog.python.org/favicon.ico' rel='icon' type='image/x-icon'/>\n<meta content='blogger' name='generator'/>\n<link href='https://blog.python.org/feeds/posts/default' rel='alternate' title='Python Insider - Atom' type='application/atom+xml'/>\n<link href='https://blog.python.org/feeds/posts/default?alt=rss' rel='alternate' title='Python Insider - RSS' type='application/rss+xml'/>\n<link href='https://www.blogger.com/feeds/3941553907430899163/posts/default' rel='service.post' title='Python Insider - Atom' type='application/atom+xml'/>\n<!--[if IE]><script type=\"text/javascript\" src=\"https://www.blogger.com/static/v1/jsbin/2591933621-ieretrofit.js\"></script> <![endif]-->\n<meta content='https://blog.python.org/' name='og:url:domain'/>\n<!--[if IE]> <script> (function() { var html5 = (\"abbr,article,aside,audio,canvas,datalist,details,\" + \"figure,footer,header,hgroup,mark,menu,meter,nav,output,\" + \"progress,section,time,video\").split(','); for (var i = 0; i < html5.length; i++) { document.createElement(html5[i]); } try { document.execCommand('BackgroundImageCache', false, true); } catch(e) {} })(); </script> <![endif]-->\n<title>Python Insider</title>\n<meta name='author' value='The Python Community'/>\n<style id='page-skin-1' type='text/css'><!--\n\n--></style>\n<style id='template-skin-1' type='text/css'><!--\n\n--></style>\n<!--[if lt IE 9]> <script src=\"http://html5shiv.googlecode.com/svn/trunk/html5.js\"></script> <![endif]-->\n<style type='text/css'>\nbody {\n  font-family: Arial,Tahoma,Helvetica,FreeSans,sans-serif;\n  font-size: 12px;\n  color: #111;\n  background:#3272ac;\n\n  background-image: -webkit-gradient(\n    linear,\n    left bottom,\n    left top,\n    color-stop(0.21, rgb(50,114,172)),\n    color-stop(0.84, rgb(250,229,164))\n);\nbackground-image: -moz-linear-gradient(\n    center bottom,\n    #3272ac 21%,\n    #fae5a4 84%\n);\n\nbackground-repeat:no-repeat;\n}\n\nh2 {font-size: 1em; }\nh3 { font-size: 1.2em}\n\n#wholeC {\n  background-color:#fff;\n  width: 90%;\n  margin: 0 auto 2em auto;\n}\n\n#cmain {\n  float:left;\n  width: 68%;\n  padding:0;\n  margin: 2em 0 2em 2%;\n}\n#cside {\n  float:right;\n  width: 23%;\n  margin-right: 2%;\n  margin-top: 2em;\n  margin-bottom: 3em;\n  padding-bottom: 3em;\n  font-size: 0.95em;\n}\n#cside a {\nfont-size: 0.95em\n}\n#cside h2 {\ntext-transform:uppercase;\ncolor: #715707\n}\n\na { color: #142f46 }\na:hover { color: #557 }\na:visited { color: #334 }\n\nh2.date-header { font-size: 13px; }\nh3.post-title { font-size: 16px; margin-bottom: 1em; }\n\ndiv.date-outer {\n/* blog post container */\nmargin: 0 0 2em 0;\npadding: 0;\nfont-size:13px;\nline-height:133%;\n}\n\nheader#chead {\ndisplay: block;\nmargin: 0 auto 1em auto;\npadding: 0;\nwidth: 70%;\nheight:145px;\noverflow: hidden;\ncolor: #222;\nbackground: #fff;\nborder-bottom: 1px solid #ddd; \n\n}\n#Header1 {\nfont-size:16px;\n}\n#Header1 .description {\nposition:relative;\ntop: -35px;\nleft: 116px;\n}\n\n.wshad {\n    padding: 2em 8px;\n    border: 1px solid #99A;\n    -moz-box-shadow: 0 5px 10px #222;\n    -webkit-box-shadow: 0 5px 10px #222;\n    box-shadow: 0 5px 10px #222;\n}\n\n.post-footer {\nborder-top:1px outset #ddd;border-right:1px inset #ddd;\nbackground-color: #f5f5f5;\npadding: 10px 5px;\nposition:relative;\nleft:-1.2em;\nopacity: 0.75;\nfont-size:0.9em;\n}\n\n</style>\n<script src='https://code.jquery.com/jquery-3.2.1.slim.min.js'></script>\n<script>\n$(document).ready(function() {\n  $(\"a\").each(function() {\n    var i = $(this).attr(\"href\");\n    if (!i) {\n      return;\n    }\n    var n = i.replace(\"https://pythoninsider.blogspot.com\", \"https://blog.python.org\");\n    $(this).attr(\"href\", function() {\n      return n\n    })\n  })\n});\n</script>\n<link href='https://www.blogger.com/dyn-css/authorization.css?targetBlogID=3941553907430899163&amp;zx=7e8ed2b6-19e6-4ba0-8c13-6bb38acec982' media='none' onload='if(media!=&#39;all&#39;)media=&#39;all&#39;' rel='stylesheet'/><noscript><link href='https://www.blogger.com/dyn-css/authorization.css?targetBlogID=3941553907430899163&amp;zx=7e8ed2b6-19e6-4ba0-8c13-6bb38acec982' rel='stylesheet'/></noscript>\n<meta name='google-adsense-platform-account' content='ca-host-pub-1556223355139109'/>\n<meta name='google-adsense-platform-domain' content='blogspot.com'/>\n\n</head>\n<body>\n<div class='navbar section' id='navbar'><div class='widget Navbar' data-version='1' id='Navbar1'><script type=\"text/javascript\">\n    function setAttributeOnload(object, attribute, val) {\n      if(window.addEventListener) {\n        window.addEventListener('load',\n          function(){ object[attribute] = val; }, false);\n      } else {\n        window.attachEvent('onload', function(){ object[attribute] = val; });\n      }\n    }\n  </script>\n<div id=\"navbar-iframe-container\"></div>\n<script type=\"text/javascript\" src=\"https://apis.google.com/js/platform.js\"></script>\n<script type=\"text/javascript\">\n      gapi.load(\"gapi.iframes:gapi.iframes.style.bubble\", function() {\n        if (gapi.iframes && gapi.iframes.getContext) {\n          gapi.iframes.getContext().openChild({\n              url: 'https://www.blogger.com/navbar/3941553907430899163?origin\\x3dhttps://pythoninsider.blogspot.com',\n              where: document.getElementById(\"navbar-iframe-container\"),\n              id: \"navbar-iframe\"\n          });\n        }\n      });\n    </script><script type=\"text/javascript\">\n(function() {\nvar script = document.createElement('script');\nscript.type = 'text/javascript';\nscript.src = '//pagead2.googlesyndication.com/pagead/js/google_top_exp.js';\nvar head = document.getElementsByTagName('head')[0];\nif (head) {\nhead.appendChild(script);\n}})();\n</script>\n</div></div>\n<div id='wholeC'>\n<header id='chead'>\n<div class='header section' id='header'><div class='widget Header' data-version='1' id='Header1'>\n<div id='header-inner'>\n<a href='https://pythoninsider.blogspot.com/' style='display: block'>\n<img alt='Python Insider' height='139px; ' id='Header1_headerimg' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiaYv-cjwDu6xU0AXLrBK0BEw19ERUxBEsbApijz0uyz_ouDUsdt-RS8Ims7R2PCwvlQAFhxxA15m7zgeB582M-Wsz9bSTpLk7WkzBdwwrMVRJPE-OstLYwR3TFITAh77gF2XEEnIzJAGRK/s1600/python-insider-header.png' style='display: block' width='600px; '/>\n</a>\n<div class='descriptionwrapper'>\n<p class='description'><span>Python core development news and information.</span></p>\n</div>\n</div>\n</div></div>\n</header>\n<div id='cmain'>\n<section id='ccontent'>\n<div class='main section' id='main'><div class='widget Blog' data-version='1' id='Blog1'>\n<div class='blog-posts hfeed'>\n<div class='status-msg-wrap'>\n<div class='status-msg-body'>\nSorry, the page you were looking for in this blog does not exist.\n</div>\n<div class='status-msg-border'>\n<div class='status-msg-bg'>\n<div class='status-msg-hidden'>Sorry, the page you were looking for in this blog does not exist.</div>\n</div>\n</div>\n</div>\n<div style='clear: both;'></div>\n</div>\n<div class='blog-pager' id='blog-pager'>\n<a class='home-link' href='https://pythoninsider.blogspot.com/'>Home</a>\n</div>\n<div class='clear'></div>\n<div class='blog-feeds'>\n<div class='feed-links'>\nSubscribe to:\n<a class='feed-link' href='https://pythoninsider.blogspot.com/feeds/posts/default' target='_blank' type='application/atom+xml'>Comments (Atom)</a>\n</div>\n</div>\n</div></div>\n</section>\n</div>\n<aside id='cside'>\n<div class='wshad' id='sidebar1'>\n<div class='section' id='sidebar-right-1'><div class='widget HTML' data-version='1' id='HTML1'>\n<h2 class='title'>Subscribe</h2>\n<div class='widget-content'>\nSubscribe to Python Insider via <a href=\"https://blog.python.org/feeds/posts/default?alt=rss\">RSS</a>, or <a href=\"http://twitter.com/PythonInsider\">Twitter</a>\n</div>\n<div class='clear'></div>\n</div><div class='widget LinkList' data-version='1' id='LinkList1'>\n<h2>Related Links</h2>\n<div class='widget-content'>\n<ul>\n<li><a href='http://www.python.org/'>python.org</a></li>\n<li><a href='http://mail.python.org/mailman/listinfo/python-dev'>Python-Dev mailing list</a></li>\n<li><a href='http://docs.python.org/devguide/'>Python Developer's Guide</a></li>\n</ul>\n<div class='clear'></div>\n</div>\n</div><div class='widget LinkList' data-version='1' id='LinkList2'>\n<h2>Translations</h2>\n<div class='widget-content'>\n<ul>\n<li><a href='http://blog-cn.python.org/'>Chinese (Simplified)</a></li>\n<li><a href='http://blog-tw.python.org/'>Chinese (Traditional)</a></li>\n<li><a href='http://blog-fr.python.org/'>French</a></li>\n<li><a href='http://blog-de.python.org/'>German</a></li>\n<li><a href='http://blog-ja.python.org/'>Japanese</a></li>\n<li><a href='http://blog-ko.python.org/'>Korean</a></li>\n<li><a href='http://blog-pt.python.org/'>Portuguese</a></li>\n<li><a href='http://blog-ro.python.org/'>Romanian</a></li>\n<li><a href='http://blog-ru.python.org/'>Russian</a></li>\n<li><a href='http://blog-es.python.org/'>Spanish</a></li>\n</ul>\n<div class='clear'></div>\n</div>\n</div><div class='widget BlogList' data-version='1' id='BlogList1'>\n<h2 class='title'>Python-Dev Blogs</h2>\n<div class='widget-content'>\n<div class='blog-list-container' id='BlogList1_container'>\n<ul id='BlogList1_blogs'>\n<li style='display: block;'>\n<div class='blog-icon'>\n</div>\n<div class='blog-content'>\n<div class='blog-title'>\n<a href='https://eli.thegreenplace.net/' target='_blank'>\nEli Bendersky</a>\n</div>\n<div class='item-content'>\n<span class='item-title'>\n<a href='https://eli.thegreenplace.net/2025/notes-on-the-wasm-basic-c-abi/' target='_blank'>\nNotes on the WASM Basic C ABI\n</a>\n</span>\n<div class='item-time'>\n1 day ago\n</div>\n</div>\n</div>\n<div style='clear: both;'></div>\n</li>\n<li style='display: block;'>\n<div class='blog-icon'>\n</div>\n<div class='blog-content'>\n<div class='blog-title'>\n<a href='http://morepypy.blogspot.com/' target='_blank'>\nPyPy Status Blog</a>\n</div>\n<div class='item-content'>\n<span class='item-title'>\n<a href='http://morepypy.blogspot.com/2019/12/hpy-kick-off-sprint-report.html' target='_blank'>\nHPy kick-off sprint report\n</a>\n</span>\n<div class='item-time'>\n5 years ago\n</div>\n</div>\n</div>\n<div style='clear: both;'></div>\n</li>\n<li style='display: block;'>\n<div class='blog-icon'>\n</div>\n<div class='blog-content'>\n<div class='blog-title'>\n<a href='http://www.wefearchange.org/' target='_blank'>\nPumpichank</a>\n</div>\n<div class='item-content'>\n<span class='item-title'>\n<a href='http://www.wefearchange.org/2015/04/creating-python-snaps.html' target='_blank'>\nCreating Python Snaps\n</a>\n</span>\n<div class='item-time'>\n10 years ago\n</div>\n</div>\n</div>\n<div style='clear: both;'></div>\n</li>\n<li style='display: block;'>\n<div class='blog-icon'>\n</div>\n<div class='blog-content'>\n<div class='blog-title'>\n<a href='http://ramblings.timgolden.me.uk' target='_blank'>\nTim Golden</a>\n</div>\n<div class='item-content'>\n<span class='item-title'>\n<a href='http://ramblings.timgolden.me.uk/2014/12/05/london-python-dojo-december-2014/' target='_blank'>\nLondon Python Dojo December 2014\n</a>\n</span>\n<div class='item-time'>\n10 years ago\n</div>\n</div>\n</div>\n<div style='clear: both;'></div>\n</li>\n<li style='display: block;'>\n<div class='blog-icon'>\n</div>\n<div class='blog-content'>\n<div class='blog-title'>\n<a href='http://www.bitdance.com/blog' target='_blank'>\nR. David Murray</a>\n</div>\n<div class='item-content'>\n<span class='item-title'>\n<a href='http://www.bitdance.com/blog/2014/09/30_01_asycio_overview' target='_blank'>\nAsyncio Implementation Overview\n</a>\n</span>\n<div class='item-time'>\n11 years ago\n</div>\n</div>\n</div>\n<div style='clear: both;'></div>\n</li>\n<li style='display: block;'>\n<div class='blog-icon'>\n</div>\n<div class='blog-content'>\n<div class='blog-title'>\n<a href='http://www.voidspace.org.uk/python/weblog/index.shtml' target='_blank'>\nThe Voidspace Techie Blog</a>\n</div>\n<div class='item-content'>\n<span class='item-title'>\n<a href='http://www.voidspace.org.uk/python/weblog/arch_d7_2012_03_24.shtml#e1237' target='_blank'>\nunittest.mock and mock 1.0 alpha 1\n</a>\n</span>\n<div class='item-time'>\n13 years ago\n</div>\n</div>\n</div>\n<div style='clear: both;'></div>\n</li>\n<li style='display: block;'>\n<div class='blog-icon'>\n</div>\n<div class='blog-content'>\n<div class='blog-title'>\n<a href='https://tarekziade.wordpress.com' target='_blank'>\nTarek Ziadé</a>\n</div>\n<div class='item-content'>\n<span class='item-title'>\n<a href='https://tarekziade.wordpress.com/2012/02/29/more-privacy-please/' target='_blank'>\nMore privacy please\n</a>\n</span>\n<div class='item-time'>\n13 years ago\n</div>\n</div>\n</div>\n<div style='clear: both;'></div>\n</li>\n<li style='display: block;'>\n<div class='blog-icon'>\n</div>\n<div class='blog-content'>\n<div class='blog-title'>\n<a href='https://rhettinger.wordpress.com' target='_blank'>\nDeep Thoughts by Raymond Hettinger</a>\n</div>\n<div class='item-content'>\n<span class='item-title'>\n<a href='https://rhettinger.wordpress.com/2011/05/26/super-considered-super/' target='_blank'>\nPython&#8217;s super() considered super!\n</a>\n</span>\n<div class='item-time'>\n14 years ago\n</div>\n</div>\n</div>\n<div style='clear: both;'></div>\n</li>\n<li style='display: block;'>\n<div class='blog-icon'>\n</div>\n<div class='blog-content'>\n<div class='blog-title'>\n<a href='http://jessenoller.com/feed/' target='_blank'>\nJesse Noller</a>\n</div>\n<div class='item-content'>\n<span class='item-title'>\n<!--Can't find substitution for tag [item.itemTitle]-->\n</span>\n<div class='item-time'>\n<!--Can't find substitution for tag [item.timePeriodSinceLastUpdate]-->\n</div>\n</div>\n</div>\n<div style='clear: both;'></div>\n</li>\n<li style='display: block;'>\n<div class='blog-icon'>\n</div>\n<div class='blog-content'>\n<div class='blog-title'>\n<a href='http://www.uthcode.com/blog/feeds/atom.xml' target='_blank'>\nSenthil Kumaran</a>\n</div>\n<div class='item-content'>\n<span class='item-title'>\n<!--Can't find substitution for tag [item.itemTitle]-->\n</span>\n<div class='item-time'>\n<!--Can't find substitution for tag [item.timePeriodSinceLastUpdate]-->\n</div>\n</div>\n</div>\n<div style='clear: both;'></div>\n</li>\n<li style='display: block;'>\n<div class='blog-icon'>\n</div>\n<div class='blog-content'>\n<div class='blog-title'>\n<a href='http://feeds.feedburner.com/CoderWhoSaysPy' target='_blank'>\nBrett Cannon</a>\n</div>\n<div class='item-content'>\n<span class='item-title'>\n<!--Can't find substitution for tag [item.itemTitle]-->\n</span>\n<div class='item-time'>\n<!--Can't find substitution for tag [item.timePeriodSinceLastUpdate]-->\n</div>\n</div>\n</div>\n<div style='clear: both;'></div>\n</li>\n<li style='display: block;'>\n<div class='blog-icon'>\n</div>\n<div class='blog-content'>\n<div class='blog-title'>\n<a href='http://www.boredomandlaziness.org/feeds/posts/default' target='_blank'>\nBoredom & Laziness</a>\n</div>\n<div class='item-content'>\n<span class='item-title'>\n<!--Can't find substitution for tag [item.itemTitle]-->\n</span>\n<div class='item-time'>\n<!--Can't find substitution for tag [item.timePeriodSinceLastUpdate]-->\n</div>\n</div>\n</div>\n<div style='clear: both;'></div>\n</li>\n<li style='display: block;'>\n<div class='blog-icon'>\n</div>\n<div class='blog-content'>\n<div class='blog-title'>\n<a href='http://blog.briancurtin.com/feed/' target='_blank'>\nBrian Curtin</a>\n</div>\n<div class='item-content'>\n<span class='item-title'>\n<!--Can't find substitution for tag [item.itemTitle]-->\n</span>\n<div class='item-time'>\n<!--Can't find substitution for tag [item.timePeriodSinceLastUpdate]-->\n</div>\n</div>\n</div>\n<div style='clear: both;'></div>\n</li>\n</ul>\n<div class='clear'></div>\n</div>\n</div>\n</div><div class='widget BlogArchive' data-version='1' id='BlogArchive1'>\n<h2>Blog Archive</h2>\n<div class='widget-content'>\n<div id='ArchiveList'>\n<div id='BlogArchive1_ArchiveList'>\n<ul class='hierarchy'>\n<li class='archivedate expanded'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy toggle-open'>\n\n        &#9660;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2025/'>\n2025\n</a>\n<span class='post-count' dir='ltr'>(21)</span>\n<ul class='hierarchy'>\n<li class='archivedate expanded'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy toggle-open'>\n\n        &#9660;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2025/11/'>\nNovember\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n<ul class='posts'>\n<li><a href='https://pythoninsider.blogspot.com/2025/11/python-3150a2.html'>Python 3.15.0 alpha 2</a></li>\n</ul>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2025/10/'>\nOctober\n</a>\n<span class='post-count' dir='ltr'>(5)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2025/09/'>\nSeptember\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2025/08/'>\nAugust\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2025/07/'>\nJuly\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2025/06/'>\nJune\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2025/05/'>\nMay\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2025/04/'>\nApril\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2025/03/'>\nMarch\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2025/02/'>\nFebruary\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2025/01/'>\nJanuary\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2024/'>\n2024\n</a>\n<span class='post-count' dir='ltr'>(22)</span>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2024/12/'>\nDecember\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2024/11/'>\nNovember\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2024/10/'>\nOctober\n</a>\n<span class='post-count' dir='ltr'>(4)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2024/09/'>\nSeptember\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2024/08/'>\nAugust\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2024/07/'>\nJuly\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2024/06/'>\nJune\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2024/05/'>\nMay\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2024/04/'>\nApril\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2024/03/'>\nMarch\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2024/02/'>\nFebruary\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2024/01/'>\nJanuary\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2023/'>\n2023\n</a>\n<span class='post-count' dir='ltr'>(18)</span>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2023/12/'>\nDecember\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2023/11/'>\nNovember\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2023/10/'>\nOctober\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2023/09/'>\nSeptember\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2023/08/'>\nAugust\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2023/07/'>\nJuly\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2023/06/'>\nJune\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2023/05/'>\nMay\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2023/04/'>\nApril\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2023/03/'>\nMarch\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2023/02/'>\nFebruary\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2023/01/'>\nJanuary\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2022/'>\n2022\n</a>\n<span class='post-count' dir='ltr'>(23)</span>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2022/12/'>\nDecember\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2022/11/'>\nNovember\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2022/10/'>\nOctober\n</a>\n<span class='post-count' dir='ltr'>(4)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2022/09/'>\nSeptember\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2022/08/'>\nAugust\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2022/07/'>\nJuly\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2022/06/'>\nJune\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2022/05/'>\nMay\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2022/04/'>\nApril\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2022/03/'>\nMarch\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2022/02/'>\nFebruary\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2022/01/'>\nJanuary\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2021/'>\n2021\n</a>\n<span class='post-count' dir='ltr'>(24)</span>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2021/12/'>\nDecember\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2021/11/'>\nNovember\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2021/10/'>\nOctober\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2021/09/'>\nSeptember\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2021/08/'>\nAugust\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2021/07/'>\nJuly\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2021/06/'>\nJune\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2021/05/'>\nMay\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2021/04/'>\nApril\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2021/03/'>\nMarch\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2021/02/'>\nFebruary\n</a>\n<span class='post-count' dir='ltr'>(4)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2021/01/'>\nJanuary\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2020/'>\n2020\n</a>\n<span class='post-count' dir='ltr'>(32)</span>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2020/12/'>\nDecember\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2020/11/'>\nNovember\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2020/10/'>\nOctober\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2020/09/'>\nSeptember\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2020/08/'>\nAugust\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2020/07/'>\nJuly\n</a>\n<span class='post-count' dir='ltr'>(4)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2020/06/'>\nJune\n</a>\n<span class='post-count' dir='ltr'>(4)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2020/05/'>\nMay\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2020/04/'>\nApril\n</a>\n<span class='post-count' dir='ltr'>(4)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2020/03/'>\nMarch\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2020/02/'>\nFebruary\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2020/01/'>\nJanuary\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2019/'>\n2019\n</a>\n<span class='post-count' dir='ltr'>(36)</span>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2019/12/'>\nDecember\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2019/11/'>\nNovember\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2019/10/'>\nOctober\n</a>\n<span class='post-count' dir='ltr'>(8)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2019/09/'>\nSeptember\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2019/08/'>\nAugust\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2019/07/'>\nJuly\n</a>\n<span class='post-count' dir='ltr'>(5)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2019/06/'>\nJune\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2019/05/'>\nMay\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2019/03/'>\nMarch\n</a>\n<span class='post-count' dir='ltr'>(7)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2019/02/'>\nFebruary\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2018/'>\n2018\n</a>\n<span class='post-count' dir='ltr'>(24)</span>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2018/12/'>\nDecember\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2018/10/'>\nOctober\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2018/09/'>\nSeptember\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2018/08/'>\nAugust\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2018/06/'>\nJune\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2018/05/'>\nMay\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2018/04/'>\nApril\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2018/03/'>\nMarch\n</a>\n<span class='post-count' dir='ltr'>(5)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2018/02/'>\nFebruary\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2018/01/'>\nJanuary\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2017/'>\n2017\n</a>\n<span class='post-count' dir='ltr'>(17)</span>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2017/12/'>\nDecember\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2017/10/'>\nOctober\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2017/09/'>\nSeptember\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2017/08/'>\nAugust\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2017/07/'>\nJuly\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2017/06/'>\nJune\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2017/03/'>\nMarch\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2017/01/'>\nJanuary\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2016/'>\n2016\n</a>\n<span class='post-count' dir='ltr'>(18)</span>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2016/12/'>\nDecember\n</a>\n<span class='post-count' dir='ltr'>(5)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2016/11/'>\nNovember\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2016/10/'>\nOctober\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2016/09/'>\nSeptember\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2016/08/'>\nAugust\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2016/07/'>\nJuly\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2016/06/'>\nJune\n</a>\n<span class='post-count' dir='ltr'>(5)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2016/05/'>\nMay\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2015/'>\n2015\n</a>\n<span class='post-count' dir='ltr'>(14)</span>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2015/12/'>\nDecember\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2015/11/'>\nNovember\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2015/09/'>\nSeptember\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2015/08/'>\nAugust\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2015/07/'>\nJuly\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2015/06/'>\nJune\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2015/05/'>\nMay\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2015/03/'>\nMarch\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2015/01/'>\nJanuary\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2014/'>\n2014\n</a>\n<span class='post-count' dir='ltr'>(8)</span>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2014/12/'>\nDecember\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2014/11/'>\nNovember\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2014/05/'>\nMay\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2014/03/'>\nMarch\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2014/02/'>\nFebruary\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2013/'>\n2013\n</a>\n<span class='post-count' dir='ltr'>(5)</span>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2013/11/'>\nNovember\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2013/10/'>\nOctober\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2013/03/'>\nMarch\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2013/02/'>\nFebruary\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2012/'>\n2012\n</a>\n<span class='post-count' dir='ltr'>(9)</span>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2012/12/'>\nDecember\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2012/11/'>\nNovember\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2012/10/'>\nOctober\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2012/08/'>\nAugust\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2012/06/'>\nJune\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2012/05/'>\nMay\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2012/03/'>\nMarch\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2011/'>\n2011\n</a>\n<span class='post-count' dir='ltr'>(25)</span>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2011/08/'>\nAugust\n</a>\n<span class='post-count' dir='ltr'>(2)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2011/07/'>\nJuly\n</a>\n<span class='post-count' dir='ltr'>(3)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2011/06/'>\nJune\n</a>\n<span class='post-count' dir='ltr'>(1)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2011/05/'>\nMay\n</a>\n<span class='post-count' dir='ltr'>(7)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2011/04/'>\nApril\n</a>\n<span class='post-count' dir='ltr'>(7)</span>\n</li>\n</ul>\n<ul class='hierarchy'>\n<li class='archivedate collapsed'>\n<a class='toggle' href='javascript:void(0)'>\n<span class='zippy'>\n\n        &#9658;&#160;\n      \n</span>\n</a>\n<a class='post-count-link' href='https://pythoninsider.blogspot.com/2011/03/'>\nMarch\n</a>\n<span class='post-count' dir='ltr'>(5)</span>\n</li>\n</ul>\n</li>\n</ul>\n</div>\n</div>\n<div class='clear'></div>\n</div>\n</div><div class='widget Profile' data-version='1' id='Profile1'>\n<h2>Contributors</h2>\n<div class='widget-content'>\n<ul>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/14971120963699387108' style='background-image: url(//www.blogger.com/img/logo-16.png);'>A.M. Kuchling</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/02804541126912023065' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Alfonso de la Guarda</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/03855116138400732464' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Anthony Scopatz</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/08838587997498042260' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Antoine P.</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/06955536323236904839' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Benjamin Peterson</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/14604644394514192040' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Brian Curtin</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/14913018830568213369' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Davidmh</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/03794667532189865209' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Donald Stufft</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/01892352754222143463' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Doug Hellmann</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/13577459520968677064' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Ee Durbin</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/06795605825443412201' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Ezio Melotti</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/14973145408214215809' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Georg Brandl</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/02811718172961252565' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Hugo</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/08651696284224634544' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Jacob Coffee</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/07543015027323408421' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Jesse</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/17574962105063127018' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Kelsey Hightower</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/13232068831778121461' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Larry Hastings</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/07757697862303956313' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Mathieu Leduc-Hamel</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/08761481986934375758' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Michael Markert</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/06351908417200979114' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Mike Driscoll</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/17112379650586333719' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Ned Deily</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/07923137967169776470' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Pablo Galindo</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/17557923197983461835' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Paul Moore</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/17437958274873977298' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Philip Jenvey</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/08002085909817689325' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Sumana Harihareswara</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/10346112333332923135' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Thomas Wouters</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/14824694805745746190' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Unknown</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/12361293458447621754' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Unknown</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/01161413896843370614' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Łukasz Langa</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/10522887977715879728' style='background-image: url(//www.blogger.com/img/logo-16.png);'>Éric Araujo</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/07473216746644389812' style='background-image: url(//www.blogger.com/img/logo-16.png);'>e</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/14658404449913582628' style='background-image: url(//www.blogger.com/img/logo-16.png);'>haypo</a></li>\n<li><a class='profile-name-link g-profile' href='https://www.blogger.com/profile/07627402554307001461' style='background-image: url(//www.blogger.com/img/logo-16.png);'>tp</a></li>\n</ul>\n<div class='clear'></div>\n</div>\n</div><div class='widget HTML' data-version='1' id='HTML3'>\n<h2 class='title'>Copyright</h2>\n<div class='widget-content'>\n<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0\" src=\"https://lh3.googleusercontent.com/blogger_img_proxy/AEn0k_tHOeSoBz43fQY0lalzoqNGrClttVv_u9aEiw9UpVumABEpwtwojU4V7nKya0uJMjD4tOEfU1pINLHIkgkE9bB5cQLnEgyYT3XL1YUc5PolrfKgHEFcBcLh=s0-d\"></a><br /><span xmlns:dct=\"http://purl.org/dc/terms/\" href=\"http://purl.org/dc/dcmitype/Text\" property=\"dct:title\" rel=\"dct:type\">Python Insider</span> by <a xmlns:cc=\"http://creativecommons.org/ns#\" href=\"http://www.python.org/\" property=\"cc:attributionName\" rel=\"cc:attributionURL\">the Python Core Developers</a> is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/\">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dct=\"http://purl.org/dc/terms/\" href=\"http://blog.python.org/\" rel=\"dct:source\">blog.python.org</a>.\n</div>\n<div class='clear'></div>\n</div></div>\n<div id='attribution1'>\n<div class='section' id='attribution'><div class='widget Attribution' data-version='1' id='Attribution1'>\n<div class='widget-content' style='text-align: center;'>\nPowered by <a href='https://www.blogger.com' target='_blank'>Blogger</a>.\n</div>\n<div class='clear'></div>\n</div></div>\n</div>\n</div>\n</aside>\n<div style='clear:both'>&nbsp;</div>\n</div>\n\n<script type=\"text/javascript\" src=\"https://www.blogger.com/static/v1/widgets/3121834124-widgets.js\"></script>\n<script type='text/javascript'>\nwindow['__wavt'] = 'AOuZoY45kSSi7YGzkhfXUsOqwwrFoCdFbw:1764137531595';_WidgetManager._Init('//www.blogger.com/rearrange?blogID\\x3d3941553907430899163','//pythoninsider.blogspot.com//2024/10/python-3130-free-threading-experimental.html','3941553907430899163');\n_WidgetManager._SetDataContext([{'name': 'blog', 'data': {'blogId': '3941553907430899163', 'title': 'Python Insider', 'url': 'https://pythoninsider.blogspot.com//2024/10/python-3130-free-threading-experimental.html', 'canonicalUrl': 'https://pythoninsider.blogspot.com//2024/10/python-3130-free-threading-experimental.html', 'homepageUrl': 'https://pythoninsider.blogspot.com/', 'searchUrl': 'https://pythoninsider.blogspot.com/search', 'canonicalHomepageUrl': 'https://pythoninsider.blogspot.com/', 'blogspotFaviconUrl': 'https://pythoninsider.blogspot.com/favicon.ico', 'bloggerUrl': 'https://www.blogger.com', 'hasCustomDomain': false, 'httpsEnabled': true, 'enabledCommentProfileImages': true, 'gPlusViewType': 'FILTERED_POSTMOD', 'adultContent': false, 'analyticsAccountNumber': '', 'encoding': 'UTF-8', 'locale': 'en', 'localeUnderscoreDelimited': 'en', 'languageDirection': 'ltr', 'isPrivate': false, 'isMobile': false, 'isMobileRequest': false, 'mobileClass': '', 'isPrivateBlog': false, 'isDynamicViewsAvailable': false, 'feedLinks': '\\x3clink rel\\x3d\\x22alternate\\x22 type\\x3d\\x22application/atom+xml\\x22 title\\x3d\\x22Python Insider - Atom\\x22 href\\x3d\\x22https://pythoninsider.blogspot.com/feeds/posts/default\\x22 /\\x3e\\n\\x3clink rel\\x3d\\x22alternate\\x22 type\\x3d\\x22application/rss+xml\\x22 title\\x3d\\x22Python Insider - RSS\\x22 href\\x3d\\x22https://pythoninsider.blogspot.com/feeds/posts/default?alt\\x3drss\\x22 /\\x3e\\n\\x3clink rel\\x3d\\x22service.post\\x22 type\\x3d\\x22application/atom+xml\\x22 title\\x3d\\x22Python Insider - Atom\\x22 href\\x3d\\x22https://www.blogger.com/feeds/3941553907430899163/posts/default\\x22 /\\x3e\\n', 'meTag': '', 'adsenseHostId': 'ca-host-pub-1556223355139109', 'adsenseHasAds': false, 'adsenseAutoAds': false, 'boqCommentIframeForm': true, 'loginRedirectParam': '', 'view': '', 'dynamicViewsCommentsSrc': '//www.blogblog.com/dynamicviews/4224c15c4e7c9321/js/comments.js', 'dynamicViewsScriptSrc': '//www.blogblog.com/dynamicviews/48d454be0db742d2', 'plusOneApiSrc': 'https://apis.google.com/js/platform.js', 'disableGComments': true, 'interstitialAccepted': false, 'sharing': {'platforms': [{'name': 'Get link', 'key': 'link', 'shareMessage': 'Get link', 'target': ''}, {'name': 'Facebook', 'key': 'facebook', 'shareMessage': 'Share to Facebook', 'target': 'facebook'}, {'name': 'BlogThis!', 'key': 'blogThis', 'shareMessage': 'BlogThis!', 'target': 'blog'}, {'name': 'X', 'key': 'twitter', 'shareMessage': 'Share to X', 'target': 'twitter'}, {'name': 'Pinterest', 'key': 'pinterest', 'shareMessage': 'Share to Pinterest', 'target': 'pinterest'}, {'name': 'Email', 'key': 'email', 'shareMessage': 'Email', 'target': 'email'}], 'disableGooglePlus': true, 'googlePlusShareButtonWidth': 0, 'googlePlusBootstrap': '\\x3cscript type\\x3d\\x22text/javascript\\x22\\x3ewindow.___gcfg \\x3d {\\x27lang\\x27: \\x27en\\x27};\\x3c/script\\x3e'}, 'hasCustomJumpLinkMessage': false, 'jumpLinkMessage': 'Read more', 'pageType': 'error_page', 'pageName': '', 'pageTitle': 'Python Insider'}}, {'name': 'features', 'data': {}}, {'name': 'messages', 'data': {'edit': 'Edit', 'linkCopiedToClipboard': 'Link copied to clipboard!', 'ok': 'Ok', 'postLink': 'Post Link'}}, {'name': 'template', 'data': {'name': 'custom', 'localizedName': 'Custom', 'isResponsive': false, 'isAlternateRendering': false, 'isCustom': true}}, {'name': 'view', 'data': {'classic': {'name': 'classic', 'url': '?view\\x3dclassic'}, 'flipcard': {'name': 'flipcard', 'url': '?view\\x3dflipcard'}, 'magazine': {'name': 'magazine', 'url': '?view\\x3dmagazine'}, 'mosaic': {'name': 'mosaic', 'url': '?view\\x3dmosaic'}, 'sidebar': {'name': 'sidebar', 'url': '?view\\x3dsidebar'}, 'snapshot': {'name': 'snapshot', 'url': '?view\\x3dsnapshot'}, 'timeslide': {'name': 'timeslide', 'url': '?view\\x3dtimeslide'}, 'isMobile': false, 'title': 'Python Insider', 'description': 'Python core development news and information.', 'url': 'https://pythoninsider.blogspot.com//2024/10/python-3130-free-threading-experimental.html', 'type': 'error', 'isSingleItem': false, 'isMultipleItems': false, 'isError': true, 'isPage': false, 'isPost': false, 'isHomepage': false, 'isArchive': false, 'isLabelSearch': false}}]);\n_WidgetManager._RegisterWidget('_NavbarView', new _WidgetInfo('Navbar1', 'navbar', document.getElementById('Navbar1'), {}, 'displayModeFull'));\n_WidgetManager._RegisterWidget('_HeaderView', new _WidgetInfo('Header1', 'header', document.getElementById('Header1'), {}, 'displayModeFull'));\n_WidgetManager._RegisterWidget('_BlogView', new _WidgetInfo('Blog1', 'main', document.getElementById('Blog1'), {'cmtInteractionsEnabled': false, 'navMessage': 'Sorry, the page you were looking for in this blog does not exist.', 'lightboxEnabled': true, 'lightboxModuleUrl': 'https://www.blogger.com/static/v1/jsbin/788323086-lbx.js', 'lightboxCssUrl': 'https://www.blogger.com/static/v1/v-css/828616780-lightbox_bundle.css'}, 'displayModeFull'));\n_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML1', 'sidebar-right-1', document.getElementById('HTML1'), {}, 'displayModeFull'));\n_WidgetManager._RegisterWidget('_LinkListView', new _WidgetInfo('LinkList1', 'sidebar-right-1', document.getElementById('LinkList1'), {}, 'displayModeFull'));\n_WidgetManager._RegisterWidget('_LinkListView', new _WidgetInfo('LinkList2', 'sidebar-right-1', document.getElementById('LinkList2'), {}, 'displayModeFull'));\n_WidgetManager._RegisterWidget('_BlogListView', new _WidgetInfo('BlogList1', 'sidebar-right-1', document.getElementById('BlogList1'), {'numItemsToShow': 0, 'totalItems': 13}, 'displayModeFull'));\n_WidgetManager._RegisterWidget('_BlogArchiveView', new _WidgetInfo('BlogArchive1', 'sidebar-right-1', document.getElementById('BlogArchive1'), {'languageDirection': 'ltr', 'loadingMessage': 'Loading\\x26hellip;'}, 'displayModeFull'));\n_WidgetManager._RegisterWidget('_ProfileView', new _WidgetInfo('Profile1', 'sidebar-right-1', document.getElementById('Profile1'), {}, 'displayModeFull'));\n_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML3', 'sidebar-right-1', document.getElementById('HTML3'), {}, 'displayModeFull'));\n_WidgetManager._RegisterWidget('_AttributionView', new _WidgetInfo('Attribution1', 'attribution', document.getElementById('Attribution1'), {}, 'displayModeFull'));\n</script>\n</body>\n</html>",
+  "metadata": {
+    "title": "Python Insider",
+    "meta_description": null,
+    "h1": null
+  },
+  "request_headers": {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en",
+    "User-Agent": "DumbCrawler/1.0",
+    "Accept-Encoding": "gzip, deflate"
+  },
+  "response_headers": {
+    "Content-Length": "9231",
+    "Content-Type": "text/html; charset=UTF-8",
+    "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+    "Pragma": "no-cache",
+    "Expires": "Mon, 01 Jan 1990 00:00:00 GMT",
+    "X-Content-Type-Options": "nosniff",
+    "X-Xss-Protection": "1; mode=block",
+    "Server": "GSE",
+    "Via": "1.1 varnish, 1.1 varnish",
+    "Accept-Ranges": "bytes",
+    "Age": "0",
+    "Date": "Wed, 26 Nov 2025 06:12:11 GMT",
+    "X-Served-By": "cache-lga21964-LGA, cache-yul1970064-YUL",
+    "X-Cache": "MISS, MISS",
+    "X-Cache-Hits": "0, 0",
+    "X-Timer": "S1764137531.477882,VS0,VE281"
+  },
+  "performance": {
+    "download_latency_s": 0.29982733726501465,
+    "timing": null
+  },
+  "screenshot_path": null,
+  "link_locations": {
+    "nav": {
+      "count": 0,
+      "links": []
+    },
+    "header": {
+      "count": 0,
+      "links": []
+    },
+    "footer": {
+      "count": 0,
+      "links": []
+    },
+    "aside": {
+      "count": 0,
+      "links": []
+    },
+    "main": {
+      "count": 0,
+      "links": []
+    }
+  },
+  "error": "Ignoring non-200 response",
+  "crawled_at": "2025-11-26T06:12:11.861427+00:00",
+  "crawler": {
+    "name": "DumbCrawler",
+    "version": "2.0",
+    "mode": "single",
+    "js_mode": "off",
+    "scope": "domain"
+  },
+  "page_size_bytes": 79159,
+  "body_text": "Python core development news and information. Sorry, the page you were looking for in this blog does not exist. Sorry, the page you were looking for in this blog does not exist. Home Subscribe to: Comments (Atom) Subscribe Subscribe to Python Insider via RSS , or Twitter Related Links python.org Python-Dev mailing list Python Developer's Guide Translations Chinese (Simplified) Chinese (Traditional) French German Japanese Korean Portuguese Romanian Russian Spanish Python-Dev Blogs Eli Bendersky Notes on the WASM Basic C ABI 1 day ago PyPy Status Blog HPy kick-off sprint report 5 years ago Pumpichank Creating Python Snaps 10 years ago Tim Golden London Python Dojo December 2014 10 years ago R. David Murray Asyncio Implementation Overview 11 years ago The Voidspace Techie Blog unittest.mock and mock 1.0 alpha 1 13 years ago Tarek Ziadé More privacy please 13 years ago Deep Thoughts by Raymond Hettinger Python’s super() considered super! 14 years ago Jesse Noller Senthil Kumaran Brett Cannon Boredom & Laziness Brian Curtin Blog Archive ▼ 2025 (21) ▼ November (1) Python 3.15.0 alpha 2 ► October (5) ► September (1) ► August (2) ► July (2) ► June (3) ► May (2) ► April (1) ► March (1) ► February (2) ► January (1) ► 2024 (22) ► December (2) ► November (1) ► October (4) ► September (1) ► August (2) ► July (1) ► June (3) ► May (1) ► April (2) ► March (2) ► February (2) ► January (1) ► 2023 (18) ► December (2) ► November (1) ► October (3) ► September (2) ► August (2) ► July (1) ► June (2) ► May (1) ► April (1) ► March (1) ► February (1) ► January (1) ► 2022 (23) ► December (1) ► November (1) ► October (4) ► September (2) ► August (2) ► July (2) ► June (2) ► May (3) ► April (1) ► March (3) ► February (1) ► January (1) ► 2021 (24) ► December (2) ► November (2) ► October (2) ► September (2) ► August (2) ► July (1) ► June (3) ► May (1) ► April (3) ► March (1) ► February (4) ► January (1) ► 2020 (32) ► December (2) ► November (2) ► October (2) ► September (3) ► August (3) ► July (4) ► June (4) ► May (2) ► April (4) ► March (3) ► February (2) ► January (1) ► 2019 (36) ► December (3) ► November (1) ► October (8) ► September (1) ► August (3) ► July (5) ► June (3) ► May (2) ► March (7) ► February (3) ► 2018 (24) ► December (2) ► October (2) ► September (1) ► August (1) ► June (2) ► May (3) ► April (3) ► March (5) ► February (2) ► January (3) ► 2017 (17) ► December (2) ► October (2) ► September (3) ► August (2) ► July (3) ► June (1) ► March (2) ► January (2) ► 2016 (18) ► December (5) ► November (1) ► October (2) ► September (2) ► August (1) ► July (1) ► June (5) ► May (1) ► 2015 (14) ► December (2) ► November (1) ► September (3) ► August (1) ► July (1) ► June (1) ► May (2) ► March (2) ► January (1) ► 2014 (8) ► December (1) ► November (1) ► May (1) ► March (3) ► February (2) ► 2013 (5) ► November (2) ► October (1) ► March (1) ► February (1) ► 2012 (9) ► December (1) ► November (1) ► October (2) ► August (1) ► June (2) ► May (1) ► March (1) ► 2011 (25) ► August (2) ► July (3) ► June (1) ► May (7) ► April (7) ► March (5) Contributors A.M. Kuchling Alfonso de la Guarda Anthony Scopatz Antoine P. Benjamin Peterson Brian Curtin Davidmh Donald Stufft Doug Hellmann Ee Durbin Ezio Melotti Georg Brandl Hugo Jacob Coffee Jesse Kelsey Hightower Larry Hastings Mathieu Leduc-Hamel Michael Markert Mike Driscoll Ned Deily Pablo Galindo Paul Moore Philip Jenvey Sumana Harihareswara Thomas Wouters Unknown Unknown Łukasz Langa Éric Araujo e haypo tp Copyright Python Insider by the Python Core Developers is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License . Based on a work at blog.python.org . Powered by Blogger .",
+  "word_count": 719,
+  "h2_tags": [
+    "Subscribe",
+    "Related Links",
+    "Translations",
+    "Python-Dev Blogs",
+    "Blog Archive",
+    "Contributors",
+    "Copyright"
+  ],
+  "h3_tags": [],
+  "canonical_url": null,
+  "meta_robots": null,
+  "lang": null,
+  "viewport": null,
+  "charset": null,
+  "og": {
+    "title": null,
+    "description": null,
+    "image": null,
+    "url": null,
+    "type": null,
+    "site_name": null
+  },
+  "twitter": {
+    "card": null,
+    "title": null,
+    "description": null,
+    "image": null,
+    "site": null
+  },
+  "images": [
+    {
+      "src": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiaYv-cjwDu6xU0AXLrBK0BEw19ERUxBEsbApijz0uyz_ouDUsdt-RS8Ims7R2PCwvlQAFhxxA15m7zgeB582M-Wsz9bSTpLk7WkzBdwwrMVRJPE-OstLYwR3TFITAh77gF2XEEnIzJAGRK/s1600/python-insider-header.png",
+      "alt": "Python Insider",
+      "width": "600px; ",
+      "height": "139px; "
+    },
+    {
+      "src": "https://lh3.googleusercontent.com/blogger_img_proxy/AEn0k_tHOeSoBz43fQY0lalzoqNGrClttVv_u9aEiw9UpVumABEpwtwojU4V7nKya0uJMjD4tOEfU1pINLHIkgkE9bB5cQLnEgyYT3XL1YUc5PolrfKgHEFcBcLh=s0-d",
+      "alt": "Creative Commons License"
+    }
+  ],
+  "images_count": 2,
+  "internal_links": [
+    {
+      "url": "https://blog.python.org/feeds/posts/default?alt=rss",
+      "anchor": "RSS",
+      "nofollow": false
+    },
+    {
+      "url": "http://www.python.org/",
+      "anchor": "python.org",
+      "nofollow": false
+    },
+    {
+      "url": "http://mail.python.org/mailman/listinfo/python-dev",
+      "anchor": "Python-Dev mailing list",
+      "nofollow": false
+    },
+    {
+      "url": "http://docs.python.org/devguide/",
+      "anchor": "Python Developer's Guide",
+      "nofollow": false
+    },
+    {
+      "url": "http://blog-cn.python.org/",
+      "anchor": "Chinese (Simplified)",
+      "nofollow": false
+    },
+    {
+      "url": "http://blog-tw.python.org/",
+      "anchor": "Chinese (Traditional)",
+      "nofollow": false
+    },
+    {
+      "url": "http://blog-fr.python.org/",
+      "anchor": "French",
+      "nofollow": false
+    },
+    {
+      "url": "http://blog-de.python.org/",
+      "anchor": "German",
+      "nofollow": false
+    },
+    {
+      "url": "http://blog-ja.python.org/",
+      "anchor": "Japanese",
+      "nofollow": false
+    },
+    {
+      "url": "http://blog-ko.python.org/",
+      "anchor": "Korean",
+      "nofollow": false
+    },
+    {
+      "url": "http://blog-pt.python.org/",
+      "anchor": "Portuguese",
+      "nofollow": false
+    },
+    {
+      "url": "http://blog-ro.python.org/",
+      "anchor": "Romanian",
+      "nofollow": false
+    },
+    {
+      "url": "http://blog-ru.python.org/",
+      "anchor": "Russian",
+      "nofollow": false
+    },
+    {
+      "url": "http://blog-es.python.org/",
+      "anchor": "Spanish",
+      "nofollow": false
+    },
+    {
+      "url": "http://www.python.org/",
+      "anchor": "the Python Core Developers",
+      "nofollow": false
+    },
+    {
+      "url": "http://blog.python.org/",
+      "anchor": "blog.python.org",
+      "nofollow": false
+    }
+  ],
+  "internal_links_count": 16,
+  "external_links": [
+    {
+      "url": "https://pythoninsider.blogspot.com/",
+      "anchor": "",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/",
+      "anchor": "Home",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/feeds/posts/default",
+      "anchor": "Comments (Atom)",
+      "nofollow": false
+    },
+    {
+      "url": "http://twitter.com/PythonInsider",
+      "anchor": "Twitter",
+      "nofollow": false
+    },
+    {
+      "url": "https://eli.thegreenplace.net/",
+      "anchor": "Eli Bendersky",
+      "nofollow": false
+    },
+    {
+      "url": "https://eli.thegreenplace.net/2025/notes-on-the-wasm-basic-c-abi/",
+      "anchor": "Notes on the WASM Basic C ABI",
+      "nofollow": false
+    },
+    {
+      "url": "http://morepypy.blogspot.com/",
+      "anchor": "PyPy Status Blog",
+      "nofollow": false
+    },
+    {
+      "url": "http://morepypy.blogspot.com/2019/12/hpy-kick-off-sprint-report.html",
+      "anchor": "HPy kick-off sprint report",
+      "nofollow": false
+    },
+    {
+      "url": "http://www.wefearchange.org/",
+      "anchor": "Pumpichank",
+      "nofollow": false
+    },
+    {
+      "url": "http://www.wefearchange.org/2015/04/creating-python-snaps.html",
+      "anchor": "Creating Python Snaps",
+      "nofollow": false
+    },
+    {
+      "url": "http://ramblings.timgolden.me.uk",
+      "anchor": "Tim Golden",
+      "nofollow": false
+    },
+    {
+      "url": "http://ramblings.timgolden.me.uk/2014/12/05/london-python-dojo-december-2014/",
+      "anchor": "London Python Dojo December 2014",
+      "nofollow": false
+    },
+    {
+      "url": "http://www.bitdance.com/blog",
+      "anchor": "R. David Murray",
+      "nofollow": false
+    },
+    {
+      "url": "http://www.bitdance.com/blog/2014/09/30_01_asycio_overview",
+      "anchor": "Asyncio Implementation Overview",
+      "nofollow": false
+    },
+    {
+      "url": "http://www.voidspace.org.uk/python/weblog/index.shtml",
+      "anchor": "The Voidspace Techie Blog",
+      "nofollow": false
+    },
+    {
+      "url": "http://www.voidspace.org.uk/python/weblog/arch_d7_2012_03_24.shtml#e1237",
+      "anchor": "unittest.mock and mock 1.0 alpha 1",
+      "nofollow": false
+    },
+    {
+      "url": "https://tarekziade.wordpress.com",
+      "anchor": "Tarek Ziadé",
+      "nofollow": false
+    },
+    {
+      "url": "https://tarekziade.wordpress.com/2012/02/29/more-privacy-please/",
+      "anchor": "More privacy please",
+      "nofollow": false
+    },
+    {
+      "url": "https://rhettinger.wordpress.com",
+      "anchor": "Deep Thoughts by Raymond Hettinger",
+      "nofollow": false
+    },
+    {
+      "url": "https://rhettinger.wordpress.com/2011/05/26/super-considered-super/",
+      "anchor": "Python’s super() considered super!",
+      "nofollow": false
+    },
+    {
+      "url": "http://jessenoller.com/feed/",
+      "anchor": "Jesse Noller",
+      "nofollow": false
+    },
+    {
+      "url": "http://www.uthcode.com/blog/feeds/atom.xml",
+      "anchor": "Senthil Kumaran",
+      "nofollow": false
+    },
+    {
+      "url": "http://feeds.feedburner.com/CoderWhoSaysPy",
+      "anchor": "Brett Cannon",
+      "nofollow": false
+    },
+    {
+      "url": "http://www.boredomandlaziness.org/feeds/posts/default",
+      "anchor": "Boredom & Laziness",
+      "nofollow": false
+    },
+    {
+      "url": "http://blog.briancurtin.com/feed/",
+      "anchor": "Brian Curtin",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2025/",
+      "anchor": "2025",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2025/11/",
+      "anchor": "November",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2025/11/python-3150a2.html",
+      "anchor": "Python 3.15.0 alpha 2",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2025/10/",
+      "anchor": "October",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2025/09/",
+      "anchor": "September",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2025/08/",
+      "anchor": "August",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2025/07/",
+      "anchor": "July",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2025/06/",
+      "anchor": "June",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2025/05/",
+      "anchor": "May",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2025/04/",
+      "anchor": "April",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2025/03/",
+      "anchor": "March",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2025/02/",
+      "anchor": "February",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2025/01/",
+      "anchor": "January",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2024/",
+      "anchor": "2024",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2024/12/",
+      "anchor": "December",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2024/11/",
+      "anchor": "November",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2024/10/",
+      "anchor": "October",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2024/09/",
+      "anchor": "September",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2024/08/",
+      "anchor": "August",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2024/07/",
+      "anchor": "July",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2024/06/",
+      "anchor": "June",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2024/05/",
+      "anchor": "May",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2024/04/",
+      "anchor": "April",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2024/03/",
+      "anchor": "March",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2024/02/",
+      "anchor": "February",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2024/01/",
+      "anchor": "January",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2023/",
+      "anchor": "2023",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2023/12/",
+      "anchor": "December",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2023/11/",
+      "anchor": "November",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2023/10/",
+      "anchor": "October",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2023/09/",
+      "anchor": "September",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2023/08/",
+      "anchor": "August",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2023/07/",
+      "anchor": "July",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2023/06/",
+      "anchor": "June",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2023/05/",
+      "anchor": "May",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2023/04/",
+      "anchor": "April",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2023/03/",
+      "anchor": "March",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2023/02/",
+      "anchor": "February",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2023/01/",
+      "anchor": "January",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2022/",
+      "anchor": "2022",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2022/12/",
+      "anchor": "December",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2022/11/",
+      "anchor": "November",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2022/10/",
+      "anchor": "October",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2022/09/",
+      "anchor": "September",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2022/08/",
+      "anchor": "August",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2022/07/",
+      "anchor": "July",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2022/06/",
+      "anchor": "June",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2022/05/",
+      "anchor": "May",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2022/04/",
+      "anchor": "April",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2022/03/",
+      "anchor": "March",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2022/02/",
+      "anchor": "February",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2022/01/",
+      "anchor": "January",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2021/",
+      "anchor": "2021",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2021/12/",
+      "anchor": "December",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2021/11/",
+      "anchor": "November",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2021/10/",
+      "anchor": "October",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2021/09/",
+      "anchor": "September",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2021/08/",
+      "anchor": "August",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2021/07/",
+      "anchor": "July",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2021/06/",
+      "anchor": "June",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2021/05/",
+      "anchor": "May",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2021/04/",
+      "anchor": "April",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2021/03/",
+      "anchor": "March",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2021/02/",
+      "anchor": "February",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2021/01/",
+      "anchor": "January",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2020/",
+      "anchor": "2020",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2020/12/",
+      "anchor": "December",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2020/11/",
+      "anchor": "November",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2020/10/",
+      "anchor": "October",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2020/09/",
+      "anchor": "September",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2020/08/",
+      "anchor": "August",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2020/07/",
+      "anchor": "July",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2020/06/",
+      "anchor": "June",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2020/05/",
+      "anchor": "May",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2020/04/",
+      "anchor": "April",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2020/03/",
+      "anchor": "March",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2020/02/",
+      "anchor": "February",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2020/01/",
+      "anchor": "January",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2019/",
+      "anchor": "2019",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2019/12/",
+      "anchor": "December",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2019/11/",
+      "anchor": "November",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2019/10/",
+      "anchor": "October",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2019/09/",
+      "anchor": "September",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2019/08/",
+      "anchor": "August",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2019/07/",
+      "anchor": "July",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2019/06/",
+      "anchor": "June",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2019/05/",
+      "anchor": "May",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2019/03/",
+      "anchor": "March",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2019/02/",
+      "anchor": "February",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2018/",
+      "anchor": "2018",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2018/12/",
+      "anchor": "December",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2018/10/",
+      "anchor": "October",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2018/09/",
+      "anchor": "September",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2018/08/",
+      "anchor": "August",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2018/06/",
+      "anchor": "June",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2018/05/",
+      "anchor": "May",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2018/04/",
+      "anchor": "April",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2018/03/",
+      "anchor": "March",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2018/02/",
+      "anchor": "February",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2018/01/",
+      "anchor": "January",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2017/",
+      "anchor": "2017",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2017/12/",
+      "anchor": "December",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2017/10/",
+      "anchor": "October",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2017/09/",
+      "anchor": "September",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2017/08/",
+      "anchor": "August",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2017/07/",
+      "anchor": "July",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2017/06/",
+      "anchor": "June",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2017/03/",
+      "anchor": "March",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2017/01/",
+      "anchor": "January",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2016/",
+      "anchor": "2016",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2016/12/",
+      "anchor": "December",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2016/11/",
+      "anchor": "November",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2016/10/",
+      "anchor": "October",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2016/09/",
+      "anchor": "September",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2016/08/",
+      "anchor": "August",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2016/07/",
+      "anchor": "July",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2016/06/",
+      "anchor": "June",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2016/05/",
+      "anchor": "May",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2015/",
+      "anchor": "2015",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2015/12/",
+      "anchor": "December",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2015/11/",
+      "anchor": "November",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2015/09/",
+      "anchor": "September",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2015/08/",
+      "anchor": "August",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2015/07/",
+      "anchor": "July",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2015/06/",
+      "anchor": "June",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2015/05/",
+      "anchor": "May",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2015/03/",
+      "anchor": "March",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2015/01/",
+      "anchor": "January",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2014/",
+      "anchor": "2014",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2014/12/",
+      "anchor": "December",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2014/11/",
+      "anchor": "November",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2014/05/",
+      "anchor": "May",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2014/03/",
+      "anchor": "March",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2014/02/",
+      "anchor": "February",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2013/",
+      "anchor": "2013",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2013/11/",
+      "anchor": "November",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2013/10/",
+      "anchor": "October",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2013/03/",
+      "anchor": "March",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2013/02/",
+      "anchor": "February",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2012/",
+      "anchor": "2012",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2012/12/",
+      "anchor": "December",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2012/11/",
+      "anchor": "November",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2012/10/",
+      "anchor": "October",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2012/08/",
+      "anchor": "August",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2012/06/",
+      "anchor": "June",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2012/05/",
+      "anchor": "May",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2012/03/",
+      "anchor": "March",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2011/",
+      "anchor": "2011",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2011/08/",
+      "anchor": "August",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2011/07/",
+      "anchor": "July",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2011/06/",
+      "anchor": "June",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2011/05/",
+      "anchor": "May",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2011/04/",
+      "anchor": "April",
+      "nofollow": false
+    },
+    {
+      "url": "https://pythoninsider.blogspot.com/2011/03/",
+      "anchor": "March",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/14971120963699387108",
+      "anchor": "A.M. Kuchling",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/02804541126912023065",
+      "anchor": "Alfonso de la Guarda",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/03855116138400732464",
+      "anchor": "Anthony Scopatz",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/08838587997498042260",
+      "anchor": "Antoine P.",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/06955536323236904839",
+      "anchor": "Benjamin Peterson",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/14604644394514192040",
+      "anchor": "Brian Curtin",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/14913018830568213369",
+      "anchor": "Davidmh",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/03794667532189865209",
+      "anchor": "Donald Stufft",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/01892352754222143463",
+      "anchor": "Doug Hellmann",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/13577459520968677064",
+      "anchor": "Ee Durbin",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/06795605825443412201",
+      "anchor": "Ezio Melotti",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/14973145408214215809",
+      "anchor": "Georg Brandl",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/02811718172961252565",
+      "anchor": "Hugo",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/08651696284224634544",
+      "anchor": "Jacob Coffee",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/07543015027323408421",
+      "anchor": "Jesse",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/17574962105063127018",
+      "anchor": "Kelsey Hightower",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/13232068831778121461",
+      "anchor": "Larry Hastings",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/07757697862303956313",
+      "anchor": "Mathieu Leduc-Hamel",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/08761481986934375758",
+      "anchor": "Michael Markert",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/06351908417200979114",
+      "anchor": "Mike Driscoll",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/17112379650586333719",
+      "anchor": "Ned Deily",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/07923137967169776470",
+      "anchor": "Pablo Galindo",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/17557923197983461835",
+      "anchor": "Paul Moore",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/17437958274873977298",
+      "anchor": "Philip Jenvey",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/08002085909817689325",
+      "anchor": "Sumana Harihareswara",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/10346112333332923135",
+      "anchor": "Thomas Wouters",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/14824694805745746190",
+      "anchor": "Unknown",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/12361293458447621754",
+      "anchor": "Unknown",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/01161413896843370614",
+      "anchor": "Łukasz Langa",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/10522887977715879728",
+      "anchor": "Éric Araujo",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/07473216746644389812",
+      "anchor": "e",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/14658404449913582628",
+      "anchor": "haypo",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com/profile/07627402554307001461",
+      "anchor": "tp",
+      "nofollow": false
+    },
+    {
+      "url": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+      "anchor": "",
+      "nofollow": false
+    },
+    {
+      "url": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+      "anchor": "Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License",
+      "nofollow": false
+    },
+    {
+      "url": "https://www.blogger.com",
+      "anchor": "Blogger",
+      "nofollow": false
+    }
+  ],
+  "external_links_count": 215,
+  "json_ld": [],
+  "schema_types": [],
+  "content_age": {
+    "published": "2025-11-26T06:12:11+00:00",
+    "modified": "2025-11-26T06:12:11+00:00",
+    "sources": {
+      "modified": "header:Date",
+      "published": "header:Date"
+    },
+    "age_days": 0
+  }
+}

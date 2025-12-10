@@ -1,0 +1,151 @@
+project:
+  name: dumbcrawler
+  description: >
+    A simple, stable, API-first web crawler engine using Scrapy + Playwright.
+    It supports single URL, list of URLs, and auto-discovery crawl with depth.
+    It outputs JSON per URL and does NOT use any database or SaaS features yet.
+
+  goals:
+    - Crawl any public website, including JS-heavy ones, reliably.
+    - Support three modes: single, list, crawl (auto-discovery with max depth).
+    - Support scoping: subdomain-only, whole domain, subfolder-only, or both.
+    - Produce one clean JSON object per crawled URL (JSONL file).
+    - Keep the crawler "dumb": no tagging, no scoring, no embeddings, no DB.
+
+  non_goals:
+    - No persistent database (Postgres, etc.) in this phase.
+    - No SaaS dashboard or multi-tenant logic yet.
+    - No embeddings, vector search, or AI analysis inside the crawler.
+    - No heavy business logic inside spider (keep it mechanical).
+
+stack:
+  language: python
+  python_version: "3.11"
+
+  libraries:
+    - scrapy
+    - scrapy-playwright
+    - playwright (chromium)
+    - beautifulsoup4
+    - lxml
+
+  entrypoints:
+    cli_runner: run_crawl.py     # python run_crawl.py ...
+    scrapy_project_root: scrapy_app
+
+filesystem:
+  root: .
+  structure:
+    - path: scrapy_app/
+      description: Scrapy project root for dumbcrawler.
+    - path: scrapy_app/dumbcrawler/settings.py
+      description: Scrapy settings including scrapy-playwright integration.
+    - path: scrapy_app/dumbcrawler/spiders/dumb_spider.py
+      description: Main spider supporting modes, depth, and scoping.
+    - path: scrapy_app/dumbcrawler/pipelines.py
+      description: Pipelines for HTML parsing, metadata extraction, JSON output.
+    - path: run_crawl.py
+      description: Programmatic/CLI entrypoint to run the spider with arguments.
+    - path: dumbcrawler_output.jsonl
+      description: Expected output file, 1 JSON object per crawled URL (JSONL).
+
+crawler:
+  spider:
+    name: dumb_spider
+    modes:
+      - single   # one URL, no discovery
+      - list     # multiple URLs, no discovery
+      - crawl    # auto-discovery with max depth
+
+    arguments:
+      client_id: string          # external identifier, not used for logic yet
+      crawl_job_id: string       # job identifier, used only for tracing
+      mode: [single, list, crawl]
+      start_urls: string         # comma-separated URLs
+      max_depth: integer         # used only in crawl mode
+      js_mode: [off, auto, full] # controls Playwright usage
+      restrict_to_subdomain: boolean
+      restrict_to_path: boolean  # restrict to starting path prefix (subfolder)
+
+  scoping_rules:
+    subdomain_only:
+      description: >
+        Follow links only when target.netloc == starting netloc
+        (e.g. only blog.example.com).
+    domain_wide:
+      description: >
+        Follow links when target.netloc endswith base domain
+        (e.g. *.example.com).
+    subfolder_only:
+      description: >
+        Follow links only when target.path starts with the starting URL path
+        (normalized with trailing slash).
+    combined:
+      description: >
+        Subdomain + subfolder for very strict microsite crawling.
+
+  js_rendering:
+    js_mode:
+      off: "Never use Playwright; plain HTTP only."
+      full: "Use Playwright for all requests."
+      auto: "Use Playwright only for depth == 0 (root pages); HTML only deeper."
+
+data_flow:
+  - step: spider_fetches
+    description: >
+      DumbSpider requests URLs (HTTP or Playwright) according to mode, depth,
+      scoping rules, and js_mode.
+
+  - step: spider_emits_item
+    description: >
+      For each response, spider emits a raw item dict including:
+      client_id, crawl_job_id, url, status_code, depth, referrer_url,
+      raw_html, response_headers.
+
+  - step: metadata_extraction_pipeline
+    description: >
+      Pipelines parse raw_html (BeautifulSoup/lxml) to extract basic metadata:
+      title, h1, meta_description, and possibly other basic SEO fields.
+
+  - step: json_output_pipeline
+    description: >
+      Final pipeline serializes the enriched item to JSON and writes one line
+      per URL into a JSONL file (e.g. dumbcrawler_output.jsonl).
+
+output_format:
+  type: jsonl
+  per_url_object:
+    required_fields:
+      - client_id
+      - crawl_job_id
+      - url
+      - status_code
+      - depth
+      - referrer_url
+      - raw_html
+      - response_headers
+    optional_fields:
+      - meta_title
+      - meta_description
+      - h1
+    notes: >
+      In later phases this object will evolve toward the full UrlData schema
+      (83+ fields) but for this phase a minimal, consistent structure is enough.
+
+testing:
+  recommended_manual_tests:
+    - name: subdomain_only_lasalle
+      description: Crawl only lasallecollege.lcieducation.com with depth 2.
+    - name: full_cleio
+      description: Domain-wide crawl of cleio.com with depth 3.
+    - name: single_page_techo_bloc
+      description: Single-page crawl of https://www.techo-bloc.com/shop/pavers
+    - name: full_mcaressources
+      description: Crawl mcaressources.ca with depth 3.
+
+constraints:
+  - No persistent database in this phase.
+  - No external API calls (no embeddings, scoring, tagging).
+  - Focus on reliability, simplicity, and predictable behavior.
+  - Crawler must be “dumb”: only crawl + extract + JSON output.
+

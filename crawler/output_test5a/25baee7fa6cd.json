@@ -1,0 +1,34 @@
+{
+  "url": "https://httpbin.org/robots.txt",
+  "status_code": 200,
+  "depth": 0,
+  "referrer": null,
+  "raw_html": "User-agent: *\nDisallow: /deny\n",
+  "metadata": {
+    "title": null,
+    "meta_description": null,
+    "h1": null
+  },
+  "request_headers": {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en",
+    "User-Agent": "DumbCrawler/1.0",
+    "Accept-Encoding": "gzip, deflate"
+  },
+  "response_headers": {
+    "Content-Length": "30",
+    "Date": "Wed, 26 Nov 2025 05:28:24 GMT",
+    "Content-Type": "text/plain",
+    "Server": "gunicorn/19.9.0",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Credentials": "true"
+  },
+  "crawled_at": "2025-11-26T05:28:24.177382+00:00",
+  "crawler": {
+    "name": "DumbCrawler",
+    "version": "1.0",
+    "mode": "list",
+    "js_mode": "off",
+    "scope": "domain"
+  }
+}

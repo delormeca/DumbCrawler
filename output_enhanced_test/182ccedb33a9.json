@@ -1,0 +1,113 @@
+{
+  "url": "https://example.com/",
+  "status_code": 200,
+  "depth": 0,
+  "referrer": null,
+  "raw_html": "<!DOCTYPE html><html lang=\"en\"><head><title>Example Domain</title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><style>body{background:#eee;width:60vw;margin:15vh auto;font-family:system-ui,sans-serif}h1{font-size:1.5em}div{opacity:0.8}a:link,a:visited{color:#348}</style></head><body><div><h1>Example Domain</h1><p>This domain is for use in documentation examples without needing permission. Avoid use in operations.</p><p><a href=\"https://iana.org/domains/example\">Learn more</a></p></div>\n</body></html>",
+  "metadata": {
+    "title": "Example Domain",
+    "meta_description": null,
+    "h1": "Example Domain"
+  },
+  "request_headers": {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en",
+    "User-Agent": "DumbCrawler/1.0",
+    "Accept-Encoding": "gzip, deflate"
+  },
+  "response_headers": {
+    "Accept-Ranges": "bytes",
+    "Alt-Svc": "h3=\":443\"; ma=93600",
+    "Cache-Control": "max-age=86000",
+    "Content-Length": "363",
+    "Content-Type": "text/html",
+    "Date": "Wed, 26 Nov 2025 05:57:19 GMT",
+    "Etag": "\"bc2473a18e003bdb249eba5ce893033f:1760028122.592274\"",
+    "Last-Modified": "Thu, 09 Oct 2025 16:42:02 GMT",
+    "Vary": "Accept-Encoding"
+  },
+  "performance": {
+    "download_latency_s": 3.5583596229553223,
+    "timing": {
+      "dns_lookup_ms": 48,
+      "tcp_connect_ms": 250,
+      "ttfb_ms": 108,
+      "dom_load_ms": 3348,
+      "full_load_ms": 3348,
+      "dom_interactive_ms": 3348,
+      "transfer_size": 663,
+      "encoded_body_size": 363,
+      "decoded_body_size": 513
+    }
+  },
+  "screenshot_path": "C:\\Users\\Admin\\Documents\\DumbCrawler\\output_enhanced_test\\screenshots\\c984d06aafbe.png",
+  "link_locations": {
+    "nav": {
+      "count": 0,
+      "links": []
+    },
+    "header": {
+      "count": 0,
+      "links": []
+    },
+    "footer": {
+      "count": 0,
+      "links": []
+    },
+    "aside": {
+      "count": 0,
+      "links": []
+    },
+    "main": {
+      "count": 0,
+      "links": []
+    }
+  },
+  "crawled_at": "2025-11-26T05:57:19.541189+00:00",
+  "crawler": {
+    "name": "DumbCrawler",
+    "version": "2.0",
+    "mode": "single",
+    "js_mode": "full",
+    "scope": "domain"
+  },
+  "page_size_bytes": 528,
+  "body_text": "Example Domain This domain is for use in documentation examples without needing permission. Avoid use in operations. Learn more",
+  "word_count": 19,
+  "h2_tags": [],
+  "h3_tags": [],
+  "canonical_url": null,
+  "meta_robots": null,
+  "lang": "en",
+  "viewport": "width=device-width, initial-scale=1",
+  "charset": null,
+  "og": {
+    "title": null,
+    "description": null,
+    "image": null,
+    "url": null,
+    "type": null,
+    "site_name": null
+  },
+  "twitter": {
+    "card": null,
+    "title": null,
+    "description": null,
+    "image": null,
+    "site": null
+  },
+  "images": [],
+  "images_count": 0,
+  "internal_links": [],
+  "internal_links_count": 0,
+  "external_links": [
+    {
+      "url": "https://iana.org/domains/example",
+      "anchor": "Learn more",
+      "nofollow": false
+    }
+  ],
+  "external_links_count": 1,
+  "json_ld": [],
+  "schema_types": []
+}

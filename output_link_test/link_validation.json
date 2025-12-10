@@ -1,0 +1,532 @@
+{
+  "total": 125,
+  "ok": [
+    {
+      "url": "https://backlinko.com/hub/content/blog-seo",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/seo/backlinks",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/blog/authors/brian-dean",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/tools/competitor-analysis",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/tools/keyword",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/semrush-review",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/ecommerce-seo",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/surfer-seo",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/seo-for-new-website",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/content/types",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/tools/keyword-generator",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/seo/organic-ctr",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/small-business-seo",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/find-content-ideas",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/seo/best-practices",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/about-backlinko",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/content",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/contact",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/tools/backlink-checker",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/on-page-seo",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/content/written-content",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/generative-engine-optimization-geo",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/sitemap-generator-tools",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/clearscope-review",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/website-migration-checklist",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/seo-content",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/seo-copywriting",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/local-seo-tools",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/seo-tutorial",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/skyscraper-technique",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/tools/seo-checker",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/tools/ecommerce-keywords",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/seo/internal-links",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/technical-seo-guide",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/tools/competitor-search-ads",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/actionable-seo-tips",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/content/email-outreach",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/sparktoro-review",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/content/writing",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/copywriting-guide",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/search-engines",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/content/production",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/increase-domain-authority",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/seo/yoast",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/seo-checklist",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/content/what-is-content-marketing",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/how-to-create-a-website",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/llm-tracking-tools",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/serpstat-review",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/reddit-marketing",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/best-content-marketing-tools",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/seo/featured-snippets",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/content/social-promotion",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/content/tools",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/blog",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/improve-your-seo",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/tools/keyword-difficulty-checker",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/answer-engine-optimization-aeo",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/ai-search-strategy",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/seo-competitor-analysis",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/seo/search-intent",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/llm-seeding",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/mobile-seo-guide",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/tools/serp-checker",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/high-quality-backlinks",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/seo/pagespeed",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/social-media-platforms",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/chatgpt-alternatives",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/content-marketing-examples",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/seo-basics-for-beginners",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/content-marketing-this-year",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/link-building-tools",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/google-search-console",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/audience-research",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/ahrefs-vs-semrush",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/seo/what-is-seo",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/ai-seo-tools",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/product-page-examples",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/newsletter",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/seo/duplicate-content",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/majestic-seo-review",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/entity-seo",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/seo-site-audit",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/tools/website-authority",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/link-building-services",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/seo-software-agencies",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/seo/bounce-rate",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/tools/rank-checker",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/ahrefs-review",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/content/viral",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/ai-optimization",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/best-free-seo-tools",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/seo/serps",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/content/promotion",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/content/content-marketing-fundamentals",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/seo/sitemaps",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/google-ctr-stats",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/step-by-step-backlink-audit",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/schema-markup-guide",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/scale-content",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/content/multimedia",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/best-digital-marketing-tools",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/google-e-e-a-t",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/templates/marketing",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/seo-certification-guide",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/tools/website-traffic-checker",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/link-building",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/best-rank-tracking-tools",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/pillar-pages",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/seo/seo-keywords",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/llms-txt",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/ai-seo",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/seo-strategy",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/white-hat-seo",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/write-a-blog-post",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/link-building-strategies",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/content-strategy",
+      "status_code": 200
+    },
+    {
+      "url": "https://backlinko.com/hub/content/blog-design",
+      "status_code": 200
+    }
+  ],
+  "redirects": [
+    {
+      "url": "https://backlinko.com/seo-tools",
+      "status_code": 301,
+      "redirect_to": "/best-free-seo-tools",
+      "redirect_type": "permanent"
+    },
+    {
+      "url": "https://backlinko.com/long-tail-keywords",
+      "status_code": 301,
+      "redirect_to": "/hub/seo/long-tail-keywords",
+      "redirect_type": "permanent"
+    },
+    {
+      "url": "https://backlinko.com/competitor-analysis",
+      "status_code": 301,
+      "redirect_to": "/tools/competitor-analysis",
+      "redirect_type": "permanent"
+    },
+    {
+      "url": "https://backlinko.com/keyword-research-tools",
+      "status_code": 301,
+      "redirect_to": "/tools/keyword",
+      "redirect_type": "permanent"
+    },
+    {
+      "url": "https://backlinko.com/deals/semrush-free-trial",
+      "status_code": 301,
+      "redirect_to": "/deals/semrush-coupon",
+      "redirect_type": "permanent"
+    },
+    {
+      "url": "https://backlinko.com/backlinks-guide",
+      "status_code": 301,
+      "redirect_to": "/hub/seo/backlinks",
+      "redirect_type": "permanent"
+    }
+  ],
+  "broken": [],
+  "errors": [],
+  "summary": {
+    "ok_count": 119,
+    "redirect_count": 6,
+    "broken_count": 0,
+    "error_count": 0,
+    "elapsed_seconds": 17.68,
+    "ok_percent": 95.2,
+    "redirect_percent": 4.8,
+    "broken_percent": 0.0
+  },
+  "source_url": "https://backlinko.com/hub/content/blog-seo"
+}
