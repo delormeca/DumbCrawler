@@ -11,10 +11,11 @@ from typing import List, Optional, Generator, Set, Dict, Any
 
 class DumbCrawlerSpider(scrapy.Spider):
     """
-    DumbCrawler Spider - API-first crawler with three modes:
+    DumbCrawler Spider - API-first crawler with four modes:
     - single: crawl a single URL
     - list: crawl a list of URLs
     - crawl: auto-discovery crawl with depth control
+    - sitemap: crawl URLs from XML sitemaps (supports sitemap index, gzip, robots.txt)
     """
 
     name = "dumbcrawler"
@@ -24,11 +25,12 @@ class DumbCrawlerSpider(scrapy.Spider):
     handle_httpstatus_all = True
 
     # Spider arguments with defaults
-    # --mode: single | list | crawl
-    # --start-urls: comma-separated URLs
+    # --mode: single | list | crawl | sitemap
+    # --start-urls: comma-separated URLs (for single/list/crawl modes, OR sitemap URLs for sitemap mode)
     # --max-depth: maximum crawl depth (for crawl mode)
     # --scope: subdomain | domain | subfolder | subdomain+subfolder
     # --js-mode: off | auto | full
+    # --sitemap-alternate-links: include alternate language links from sitemaps (true/false)
 
     def __init__(
         self,
@@ -37,6 +39,7 @@ class DumbCrawlerSpider(scrapy.Spider):
         max_depth: int = 2,
         scope: str = "domain",
         js_mode: str = "off",
+        sitemap_alternate_links: str = "false",
         *args,
         **kwargs
     ):
@@ -44,10 +47,10 @@ class DumbCrawlerSpider(scrapy.Spider):
 
         # Parse and validate mode
         self.crawl_mode = mode.lower()
-        if self.crawl_mode not in ("single", "list", "crawl"):
-            raise ValueError(f"Invalid mode: {mode}. Must be: single, list, or crawl")
+        if self.crawl_mode not in ("single", "list", "crawl", "sitemap"):
+            raise ValueError(f"Invalid mode: {mode}. Must be: single, list, crawl, or sitemap")
 
-        # Parse start URLs
+        # Parse start URLs (for sitemap mode, these are sitemap URLs)
         self.start_urls = self._parse_urls(start_urls)
         if not self.start_urls:
             raise ValueError("No start URLs provided. Use --start-urls argument.")
@@ -66,6 +69,9 @@ class DumbCrawlerSpider(scrapy.Spider):
         self.js_mode = js_mode.lower()
         if self.js_mode not in ("off", "auto", "full"):
             raise ValueError(f"Invalid js_mode: {js_mode}. Must be: off, auto, or full")
+
+        # Parse sitemap alternate links setting
+        self.sitemap_alternate_links = sitemap_alternate_links.lower() in ("true", "1", "yes")
 
         # Store parsed base URL info for scope checking
         self._base_urls_info = [self._parse_url_info(url) for url in self.start_urls]
@@ -98,7 +104,11 @@ class DumbCrawlerSpider(scrapy.Spider):
 
         self.logger.info(f"DumbCrawler initialized:")
         self.logger.info(f"  Mode: {self.crawl_mode}")
-        self.logger.info(f"  Start URLs: {self.start_urls}")
+        if self.crawl_mode == "sitemap":
+            self.logger.info(f"  Sitemap URLs: {self.start_urls}")
+            self.logger.info(f"  Include Alternate Links: {self.sitemap_alternate_links}")
+        else:
+            self.logger.info(f"  Start URLs: {self.start_urls}")
         self.logger.info(f"  Max Depth: {self.max_depth}")
         self.logger.info(f"  Scope: {self.scope}")
         self.logger.info(f"  JS Mode: {self.js_mode}")
@@ -135,6 +145,184 @@ class DumbCrawlerSpider(scrapy.Spider):
             return ".".join(parts[:-2])
         return ""
 
+    def _get_sitemap_body(self, response: Response) -> Optional[bytes]:
+        """
+        Extract sitemap body from response, handling gzip compression.
+
+        Supports:
+        - Regular XML responses
+        - Gzipped sitemaps (.xml.gz)
+        - Auto-decompressed responses (Content-Encoding: gzip)
+
+        Returns None if response is not a valid sitemap.
+        """
+        from scrapy.http import XmlResponse
+        from scrapy.utils.gz import gunzip, gzip_magic_number
+        from scrapy.utils._compression import _DecompressionMaxSizeExceeded
+
+        try:
+            # If it's already an XML response, use it directly
+            if isinstance(response, XmlResponse):
+                return response.body
+
+            # Check if body is gzipped
+            if gzip_magic_number(response):
+                try:
+                    # Decompress with size limits from settings
+                    max_size = getattr(self, '_max_sitemap_size', 10 * 1024 * 1024)  # 10MB default
+                    return gunzip(response.body, max_size=max_size)
+                except _DecompressionMaxSizeExceeded:
+                    self.logger.error(f"Sitemap {response.url} exceeds maximum decompressed size")
+                    return None
+                except Exception as e:
+                    self.logger.error(f"Failed to decompress sitemap {response.url}: {e}")
+                    return None
+
+            # Handle .xml or .xml.gz URLs (might be already decompressed by middleware)
+            if response.url.endswith('.xml') or response.url.endswith('.xml.gz'):
+                return response.body
+
+            # Try to detect if it's XML content even without proper extension
+            if response.body.strip().startswith(b'<?xml') or b'<urlset' in response.body[:500] or b'<sitemapindex' in response.body[:500]:
+                return response.body
+
+        except Exception as e:
+            self.logger.error(f"Error getting sitemap body from {response.url}: {e}")
+
+        return None
+
+    def _parse_sitemap(self, response: Response) -> Generator[Request, None, None]:
+        """
+        Parse sitemap XML and yield requests for discovered URLs.
+
+        Handles:
+        - Regular sitemaps (urlset)
+        - Sitemap index files (sitemapindex) - recursively fetches nested sitemaps
+        - Gzipped sitemaps
+        - Robots.txt sitemap discovery
+        - Alternate language links (if enabled)
+        - Malformed XML (with recovery)
+
+        Applies scope filtering and deduplication.
+        """
+        from scrapy.utils.sitemap import Sitemap, sitemap_urls_from_robots
+
+        # Special handling for robots.txt
+        if response.url.endswith('/robots.txt'):
+            self.logger.info(f"Extracting sitemaps from robots.txt: {response.url}")
+            try:
+                for sitemap_url in sitemap_urls_from_robots(response.text, base_url=response.url):
+                    self.logger.info(f"Found sitemap in robots.txt: {sitemap_url}")
+                    yield Request(sitemap_url, callback=self._parse_sitemap)
+            except Exception as e:
+                self.logger.error(f"Failed to parse robots.txt {response.url}: {e}")
+            return
+
+        # Get sitemap body (handles gzip, XML detection, etc.)
+        body = self._get_sitemap_body(response)
+        if body is None:
+            self.logger.warning(f"Ignoring invalid sitemap: {response.url}")
+            return
+
+        # Parse sitemap XML
+        try:
+            sitemap = Sitemap(body)
+        except Exception as e:
+            self.logger.error(f"Failed to parse sitemap XML {response.url}: {e}")
+            return
+
+        # Filter sitemap entries (can be overridden for custom filtering)
+        sitemap_entries = self._filter_sitemap_entries(sitemap)
+
+        # Handle sitemap index (contains links to other sitemaps)
+        if sitemap.type == "sitemapindex":
+            self.logger.info(f"Processing sitemap index: {response.url}")
+            sitemap_count = 0
+
+            for entry in sitemap_entries:
+                loc = entry.get('loc')
+                if not loc:
+                    continue
+
+                sitemap_count += 1
+                self.logger.info(f"Following nested sitemap [{sitemap_count}]: {loc}")
+
+                # Recursively parse nested sitemaps
+                yield Request(loc, callback=self._parse_sitemap, priority=10)
+
+            self.logger.info(f"Sitemap index contains {sitemap_count} sitemaps")
+
+        # Handle URL set (contains actual page URLs to crawl)
+        elif sitemap.type == "urlset":
+            self.logger.info(f"Processing sitemap urlset: {response.url}")
+            url_count = 0
+            skipped_scope = 0
+            skipped_duplicate = 0
+
+            for entry in sitemap_entries:
+                # Extract URLs to crawl
+                urls_to_crawl = [entry.get('loc')]
+
+                # Include alternate language links if enabled
+                if self.sitemap_alternate_links and 'alternate' in entry:
+                    urls_to_crawl.extend(entry['alternate'])
+
+                for url in urls_to_crawl:
+                    if not url:
+                        continue
+
+                    url = url.strip()
+
+                    # Apply scope filtering
+                    if not self._is_url_in_scope(url):
+                        skipped_scope += 1
+                        continue
+
+                    # Check for duplicates
+                    normalized_url = self._normalize_url(url)
+                    if normalized_url in self._visited_urls:
+                        skipped_duplicate += 1
+                        continue
+
+                    # Mark as visited
+                    self._visited_urls.add(normalized_url)
+                    url_count += 1
+
+                    # Extract sitemap metadata for logging
+                    lastmod = entry.get('lastmod', 'N/A')
+                    priority = entry.get('priority', 'N/A')
+
+                    # Yield request to crawl this URL
+                    yield self._make_request(
+                        url=url,
+                        depth=0,
+                        referrer=response.url,
+                        dont_filter=True
+                    )
+
+            self.logger.info(
+                f"Sitemap yielded {url_count} URLs "
+                f"(skipped: {skipped_scope} out-of-scope, {skipped_duplicate} duplicates)"
+            )
+
+        else:
+            self.logger.warning(f"Unknown sitemap type '{sitemap.type}' for {response.url}")
+
+    def _filter_sitemap_entries(self, sitemap: Any) -> Generator[Dict[str, Any], None, None]:
+        """
+        Filter sitemap entries based on custom criteria.
+
+        Override this method to implement custom filtering logic:
+        - Filter by lastmod date
+        - Filter by priority
+        - Filter by changefreq
+        - etc.
+
+        Default implementation: yield all entries unchanged.
+        """
+        for entry in sitemap:
+            yield entry
+
     def start_requests(self) -> Generator[Request, None, None]:
         """Generate initial requests based on mode."""
         # Set up screenshot directory from crawler settings
@@ -144,11 +332,29 @@ class DumbCrawlerSpider(scrapy.Spider):
             os.makedirs(self._screenshot_dir, exist_ok=True)
             self.logger.info(f"Screenshots enabled, saving to: {self._screenshot_dir}")
 
-        for url in self.start_urls:
-            # Mark start URLs as visited
-            normalized_url = self._normalize_url(url)
-            self._visited_urls.add(normalized_url)
-            yield self._make_request(url, depth=0, referrer=None, dont_filter=True)
+        # Handle sitemap mode: parse sitemaps to extract URLs
+        if self.crawl_mode == "sitemap":
+            self.logger.info(f"Starting sitemap mode with {len(self.start_urls)} sitemap URL(s)")
+
+            for sitemap_url in self.start_urls:
+                self.logger.info(f"Fetching sitemap: {sitemap_url}")
+                # Yield request to parse the sitemap
+                # The _parse_sitemap callback will handle extraction and crawling
+                yield Request(
+                    sitemap_url,
+                    callback=self._parse_sitemap,
+                    errback=self.handle_error,
+                    priority=100,  # High priority for sitemap fetching
+                    dont_filter=True
+                )
+
+        # Handle other modes: single, list, crawl
+        else:
+            for url in self.start_urls:
+                # Mark start URLs as visited
+                normalized_url = self._normalize_url(url)
+                self._visited_urls.add(normalized_url)
+                yield self._make_request(url, depth=0, referrer=None, dont_filter=True)
 
     def _normalize_url(self, url: str) -> str:
         """Normalize URL for consistent duplicate detection."""

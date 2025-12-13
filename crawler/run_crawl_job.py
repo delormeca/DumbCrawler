@@ -164,7 +164,8 @@ def run_crawl_job(
     max_depth: int = 10,
     log_level: str = "INFO",
     urls: list = None,  # Specific URLs to crawl (for targeted re-crawls)
-    crawl_mode: str = "full",  # "full" or "urls_only"
+    crawl_mode: str = "full",  # "full" | "urls_only" | "sitemap"
+    sitemap_url: str = None,  # Sitemap URL for sitemap mode
 ):
     """
     Run a crawl job with API integration.
@@ -206,8 +207,34 @@ def run_crawl_job(
         # Create crawler process
         process = CrawlerProcess(settings)
 
-        # Determine start URLs based on crawl mode
-        if urls and crawl_mode == "urls_only":
+        # Determine start URLs and spider arguments based on crawl mode
+        if crawl_mode == "sitemap":
+            # Sitemap crawl: fetch URLs from sitemap
+            if not sitemap_url:
+                raise ValueError("sitemap_url is required for sitemap crawl mode")
+
+            start_urls = sitemap_url
+            spider_mode = 'sitemap'
+            effective_max_depth = 0  # Not applicable for sitemap mode
+
+            print(f"Starting SITEMAP crawl job: {job_id}")
+            print(f"  Sitemap URL: {sitemap_url}")
+            print(f"  Domain: {domain}")
+            print(f"  Scope: {scope}")
+            print(f"  JS Mode: {js_mode}")
+            print(f"  API URL: {api_url}")
+            print()
+
+            # Add the spider with sitemap mode arguments
+            process.crawl(
+                'dumbcrawler',
+                mode='sitemap',
+                start_urls=start_urls,
+                scope=scope,
+                js_mode=js_mode,
+            )
+
+        elif urls and crawl_mode == "urls_only":
             # Targeted re-crawl: use specific URLs, no link following
             start_urls = ",".join(urls)
             effective_max_depth = 0  # Don't follow links
@@ -217,6 +244,23 @@ def run_crawl_job(
                 print(f"    - {url}")
             if len(urls) > 5:
                 print(f"    ... and {len(urls) - 5} more")
+            print(f"  Scope: {scope}")
+            print(f"  JS Mode: {js_mode}")
+            print(f"  Max Pages: {max_pages}")
+            print(f"  Max Depth: {effective_max_depth}")
+            print(f"  API URL: {api_url}")
+            print()
+
+            # Add the spider with arguments
+            process.crawl(
+                'dumbcrawler',
+                mode='crawl',
+                start_urls=start_urls,
+                max_depth=effective_max_depth,
+                scope=scope,
+                js_mode=js_mode,
+            )
+
         else:
             # Full site crawl: start from domain
             start_urls = f"https://{domain}"
@@ -227,23 +271,22 @@ def run_crawl_job(
             effective_max_depth = max_depth
             print(f"Starting FULL crawl job: {job_id}")
             print(f"  Domain: {domain}")
+            print(f"  Scope: {scope}")
+            print(f"  JS Mode: {js_mode}")
+            print(f"  Max Pages: {max_pages}")
+            print(f"  Max Depth: {effective_max_depth}")
+            print(f"  API URL: {api_url}")
+            print()
 
-        print(f"  Scope: {scope}")
-        print(f"  JS Mode: {js_mode}")
-        print(f"  Max Pages: {max_pages}")
-        print(f"  Max Depth: {effective_max_depth}")
-        print(f"  API URL: {api_url}")
-        print()
-
-        # Add the spider with arguments
-        process.crawl(
-            'dumbcrawler',
-            mode='crawl',
-            start_urls=start_urls,
-            max_depth=effective_max_depth,
-            scope=scope,
-            js_mode=js_mode,
-        )
+            # Add the spider with arguments
+            process.crawl(
+                'dumbcrawler',
+                mode='crawl',
+                start_urls=start_urls,
+                max_depth=effective_max_depth,
+                scope=scope,
+                js_mode=js_mode,
+            )
 
         # Start the crawl
         process.start()
@@ -368,6 +411,7 @@ Examples:
     # If domain or project_id not provided, fetch from API
     urls = None
     crawl_mode = "full"
+    sitemap_url = None
 
     if not args.domain or not args.project_id:
         print(f"Fetching job details from API...")
@@ -383,8 +427,9 @@ Examples:
         max_pages = args.max_pages or settings.get('maxPages', 500)
 
         # Get specific URLs and crawl mode from job details
-        urls = job_details.get('urls')
-        crawl_mode = job_details.get('crawlMode', 'full')
+        urls = settings.get('urls')
+        crawl_mode = settings.get('crawlMode', 'full')
+        sitemap_url = settings.get('sitemapUrl')
     else:
         project_id = args.project_id
         domain = args.domain
@@ -412,6 +457,7 @@ Examples:
         log_level=args.log_level,
         urls=urls,
         crawl_mode=crawl_mode,
+        sitemap_url=sitemap_url,
     )
 
 
