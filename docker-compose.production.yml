@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  dumbcrawler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dumbcrawler
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
+      - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
+      - API_URL=${API_URL}
+    ports:
+      # Expose port 8080 for API access (optional - comment out if you don't need external API)
+      - "8080:8080"
+    volumes:
+      # Persist crawler output and screenshots
+      - ./crawler/scrapy_app/output:/app/crawler/scrapy_app/output
+    command: >
+      python crawler/crawler_server.py
+      --port 8080
+      --api-url ${API_URL}
+      --supabase-url ${VITE_SUPABASE_URL}
+      --supabase-key ${VITE_SUPABASE_ANON_KEY}
+    # Resource limits for 8GB VPS
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      # Optional: Expose via Traefik (uncomment if you want crawler.yourdomain.com)
+      # - "traefik.enable=true"
+      # - "traefik.http.routers.crawler.rule=Host(`crawler.yourdomain.com`)"
+      # - "traefik.http.routers.crawler.entrypoints=websecure"
+      # - "traefik.http.routers.crawler.tls.certresolver=letsencrypt"
+      # - "traefik.http.services.crawler.loadbalancer.server.port=8080"
