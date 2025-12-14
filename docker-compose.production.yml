@@ -45,10 +45,17 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-    # Optional: Uncomment labels below to expose via Traefik with HTTPS
-    # labels:
-    #   - "traefik.enable=true"
-    #   - "traefik.http.routers.crawler.rule=Host(`crawler.yourdomain.com`)"
-    #   - "traefik.http.routers.crawler.entrypoints=websecure"
-    #   - "traefik.http.routers.crawler.tls.certresolver=letsencrypt"
-    #   - "traefik.http.services.crawler.loadbalancer.server.port=8080"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.crawler.rule=Host(`dc.delorme.ca`)"
+      - "traefik.http.routers.crawler.entrypoints=websecure"
+      - "traefik.http.routers.crawler.tls.certresolver=letsencrypt"
+      - "traefik.http.services.crawler.loadbalancer.server.port=8080"
+      - "traefik.docker.network=root_default"
+    networks:
+      - default
+      - root_default
+
+networks:
+  root_default:
+    external: true
