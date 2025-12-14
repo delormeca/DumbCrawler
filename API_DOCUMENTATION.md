@@ -198,11 +198,48 @@ curl -X POST https://dc.delorme.ca/kill/abc-123-def
 
 ## 🔐 Authentication
 
-⚠️ **IMPORTANT**: Currently, the API has **NO AUTHENTICATION**.
+✅ **API Key Authentication is now enabled!**
 
-Anyone with the URL can access it. For production use, you should add API key authentication.
+All endpoints (except `/health`) require a valid API key in the `Authorization` header.
 
-**Coming Soon**: API key authentication will be added.
+### How to authenticate:
+
+```bash
+# Include the Authorization header with Bearer token
+curl -H "Authorization: Bearer YOUR_API_KEY_HERE" https://dc.delorme.ca/jobs
+```
+
+### Public endpoints (no auth required):
+- `GET /health` - Health check is always public
+
+### Protected endpoints (auth required):
+- All other endpoints require authentication
+
+### Example authenticated requests:
+
+```bash
+# List all jobs
+curl -H "Authorization: Bearer YOUR_API_KEY_HERE" https://dc.delorme.ca/jobs
+
+# Get job status
+curl -H "Authorization: Bearer YOUR_API_KEY_HERE" https://dc.delorme.ca/status/abc-123-def
+
+# Spawn a new job
+curl -X POST https://dc.delorme.ca/spawn \
+  -H "Authorization: Bearer YOUR_API_KEY_HERE" \
+  -H "Content-Type: application/json" \
+  -d '{"job_id": "abc-123-def", "log_level": "INFO"}'
+```
+
+### Error responses:
+
+**401 Unauthorized** - Missing or invalid API key:
+```json
+{
+  "error": "Unauthorized",
+  "message": "Valid API key required. Use: Authorization: Bearer YOUR_API_KEY"
+}
+```
 
 ---
 
@@ -211,15 +248,28 @@ Anyone with the URL can access it. For production use, you should add API key au
 ### JavaScript/TypeScript
 
 ```typescript
-// Health check
+const API_KEY = 'YOUR_API_KEY_HERE';
+
+// Health check (no auth required)
 const response = await fetch('https://dc.delorme.ca/health');
 const data = await response.json();
 console.log(data); // { status: 'ok', timestamp: '...' }
 
-// Spawn a job
+// List jobs (auth required)
+const jobsResponse = await fetch('https://dc.delorme.ca/jobs', {
+  headers: {
+    'Authorization': `Bearer ${API_KEY}`
+  }
+});
+const jobs = await jobsResponse.json();
+
+// Spawn a job (auth required)
 const spawnResponse = await fetch('https://dc.delorme.ca/spawn', {
   method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+  headers: {
+    'Authorization': `Bearer ${API_KEY}`,
+    'Content-Type': 'application/json'
+  },
   body: JSON.stringify({
     job_id: 'your-job-id-here',
     log_level: 'INFO'
@@ -235,16 +285,23 @@ const jobData = await spawnResponse.json();
 ```python
 import requests
 
-# Health check
+API_KEY = 'YOUR_API_KEY_HERE'
+headers = {'Authorization': f'Bearer {API_KEY}'}
+
+# Health check (no auth required)
 response = requests.get('https://dc.delorme.ca/health')
 print(response.json())
 
-# Spawn a job
+# List jobs (auth required)
+response = requests.get('https://dc.delorme.ca/jobs', headers=headers)
+print(response.json())
+
+# Spawn a job (auth required)
 spawn_data = {
     "job_id": "your-job-id-here",
     "log_level": "INFO"
 }
-response = requests.post('https://dc.delorme.ca/spawn', json=spawn_data)
+response = requests.post('https://dc.delorme.ca/spawn', json=spawn_data, headers=headers)
 print(response.json())
 ```
 
@@ -254,8 +311,12 @@ print(response.json())
 
 **HTTP Request Node:**
 - Method: `GET` or `POST`
-- URL: `https://dc.delorme.ca/health`
-- Authentication: None (for now)
+- URL: `https://dc.delorme.ca/jobs` (or other endpoint)
+- Authentication: `Header Auth`
+- Header Name: `Authorization`
+- Header Value: `Bearer YOUR_API_KEY_HERE`
+
+**Note**: The `/health` endpoint doesn't require authentication.
 
 ---
 

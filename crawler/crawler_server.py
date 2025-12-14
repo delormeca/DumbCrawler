@@ -489,10 +489,34 @@ class CrawlerAPIHandler(BaseHTTPRequestHandler):
 
     process_manager: ProcessManager = None
     api_url: str = None
+    api_key: str = None  # API key for authentication
 
     def log_message(self, format, *args):
         """Custom log format."""
         print(f"[API] {args[0]}")
+
+    def _check_auth(self) -> bool:
+        """Check if request has valid API key. Returns True if authenticated."""
+        if not self.api_key:
+            # No API key configured - allow all requests
+            return True
+
+        # Get Authorization header
+        auth_header = self.headers.get('Authorization', '')
+
+        # Check for Bearer token
+        if auth_header.startswith('Bearer '):
+            token = auth_header[7:]  # Remove 'Bearer ' prefix
+            return token == self.api_key
+
+        return False
+
+    def _send_auth_error(self):
+        """Send 401 Unauthorized response."""
+        self._send_json({
+            "error": "Unauthorized",
+            "message": "Valid API key required. Use: Authorization: Bearer YOUR_API_KEY"
+        }, 401)
 
     def _send_json(self, data: dict, status: int = 200):
         """Send JSON response."""
@@ -515,7 +539,7 @@ class CrawlerAPIHandler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
         self.end_headers()
 
     def do_GET(self):
@@ -523,10 +547,17 @@ class CrawlerAPIHandler(BaseHTTPRequestHandler):
         parsed = urlparse(self.path)
         path = parsed.path
 
+        # Health check is always public (no auth required)
         if path == '/health':
             self._send_json({"status": "ok", "timestamp": datetime.now(timezone.utc).isoformat()})
+            return
 
-        elif path == '/jobs':
+        # All other endpoints require authentication
+        if not self._check_auth():
+            self._send_auth_error()
+            return
+
+        if path == '/jobs':
             jobs = self.process_manager.list_jobs()
             self._send_json({"jobs": jobs})
 
@@ -541,6 +572,11 @@ class CrawlerAPIHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         """Handle POST requests."""
+        # All POST endpoints require authentication
+        if not self._check_auth():
+            self._send_auth_error()
+            return
+
         parsed = urlparse(self.path)
         path = parsed.path
 
@@ -617,6 +653,12 @@ def main():
         action="store_true",
         help="Disable automatic retry of failed jobs"
     )
+    parser.add_argument(
+        "--api-key",
+        type=str,
+        default=os.environ.get("API_KEY", ""),
+        help="API key for authentication (optional, from API_KEY env var)"
+    )
 
     args = parser.parse_args()
 
@@ -649,6 +691,7 @@ def main():
     # Set class variables for handler
     CrawlerAPIHandler.process_manager = process_manager
     CrawlerAPIHandler.api_url = args.api_url
+    CrawlerAPIHandler.api_key = args.api_key if args.api_key else None
 
     # Start job watcher if enabled
     if not args.no_watcher:
@@ -667,6 +710,10 @@ def main():
     print(f"=" * 60)
     print(f"Crawler Server started on port {args.port}")
     print(f"API URL: {args.api_url}")
+    if args.api_key:
+        print(f"🔐 Authentication: ENABLED (API key required)")
+    else:
+        print(f"⚠️  Authentication: DISABLED (no API key configured)")
     print(f"=" * 60)
     print(f"Endpoints:")
     print(f"  GET  /health        - Health check")

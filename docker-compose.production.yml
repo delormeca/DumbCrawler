@@ -13,6 +13,7 @@ services:
       - VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
       - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
       - API_URL=${API_URL}
+      - API_KEY=${API_KEY}
     ports:
       # Expose port 8080 for API access (optional - comment out if you don't need external API)
       - "8080:8080"
@@ -25,6 +26,7 @@ services:
       --api-url ${API_URL}
       --supabase-url ${VITE_SUPABASE_URL}
       --supabase-key ${VITE_SUPABASE_ANON_KEY}
+      --api-key ${API_KEY}
     # Resource limits for 8GB VPS
     deploy:
       resources:
