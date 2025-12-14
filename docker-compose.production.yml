@@ -45,10 +45,10 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-    labels:
-      # Optional: Expose via Traefik (uncomment if you want crawler.yourdomain.com)
-      # - "traefik.enable=true"
-      # - "traefik.http.routers.crawler.rule=Host(`crawler.yourdomain.com`)"
-      # - "traefik.http.routers.crawler.entrypoints=websecure"
-      # - "traefik.http.routers.crawler.tls.certresolver=letsencrypt"
-      # - "traefik.http.services.crawler.loadbalancer.server.port=8080"
+    # Optional: Uncomment labels below to expose via Traefik with HTTPS
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.crawler.rule=Host(`crawler.yourdomain.com`)"
+    #   - "traefik.http.routers.crawler.entrypoints=websecure"
+    #   - "traefik.http.routers.crawler.tls.certresolver=letsencrypt"
+    #   - "traefik.http.services.crawler.loadbalancer.server.port=8080"
