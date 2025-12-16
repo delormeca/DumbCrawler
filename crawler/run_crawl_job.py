@@ -252,9 +252,10 @@ def run_crawl_job(
             print()
 
             # Add the spider with arguments
+            # Use mode='list' to prevent link following (not 'crawl')
             process.crawl(
                 'dumbcrawler',
-                mode='crawl',
+                mode='list',
                 start_urls=start_urls,
                 max_depth=effective_max_depth,
                 scope=scope,
@@ -426,7 +427,7 @@ Examples:
         js_mode = args.js_mode or settings.get('jsMode', 'off')
         max_pages = args.max_pages or settings.get('maxPages', 500)
 
-        # Get specific URLs and crawl mode from job details
+        # Get specific URLs and crawl mode from settings (API stores them there)
         urls = settings.get('urls')
         crawl_mode = settings.get('crawlMode', 'full')
         sitemap_url = settings.get('sitemapUrl')
