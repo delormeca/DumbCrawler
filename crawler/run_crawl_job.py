@@ -427,16 +427,33 @@ Examples:
         js_mode = args.js_mode or settings.get('jsMode', 'off')
         max_pages = args.max_pages or settings.get('maxPages', 500)
 
-        # Get specific URLs and crawl mode from settings (API stores them there)
-        urls = settings.get('urls')
-        crawl_mode = settings.get('crawlMode', 'full')
+        # Get specific URLs and crawl mode from job details (top-level fields, not in settings)
+        urls = job_details.get('urls')
+        crawl_mode = job_details.get('crawlMode', 'full')
         sitemap_url = settings.get('sitemapUrl')
+
+        # Get maxDepth from API settings (smart defaults based on crawl mode)
+        max_depth_from_api = settings.get('maxDepth')
     else:
         project_id = args.project_id
         domain = args.domain
         scope = args.scope or 'domain'
         js_mode = args.js_mode or 'off'
         max_pages = args.max_pages or 500
+        max_depth_from_api = None
+
+    # Determine effective max_depth
+    # Priority: command-line arg > API setting > smart default based on mode
+    if args.max_depth != 10:  # 10 is the default, so user explicitly set a value
+        effective_max_depth = args.max_depth
+    elif max_depth_from_api is not None:
+        effective_max_depth = max_depth_from_api
+    else:
+        # Smart defaults: 0 for URL-only/sitemap, 10 for full crawl
+        if crawl_mode in ('urls_only', 'sitemap', 'all_existing'):
+            effective_max_depth = 0
+        else:
+            effective_max_depth = 10
 
     if not domain:
         print("Error: Domain is required. Provide --domain or ensure API returns domain.")
@@ -446,6 +463,9 @@ Examples:
         print("Error: Project ID is required. Provide --project-id or ensure API returns project_id.")
         sys.exit(1)
 
+    # Debug: Show effective max_depth
+    print(f"Max depth: {effective_max_depth} (from API: {max_depth_from_api}, arg: {args.max_depth}, mode: {crawl_mode})")
+
     run_crawl_job(
         job_id=args.job_id,
         project_id=project_id,
@@ -454,7 +474,7 @@ Examples:
         scope=scope,
         js_mode=js_mode,
         max_pages=max_pages,
-        max_depth=args.max_depth,
+        max_depth=effective_max_depth,
         log_level=args.log_level,
         urls=urls,
         crawl_mode=crawl_mode,
