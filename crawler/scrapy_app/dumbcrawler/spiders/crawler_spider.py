@@ -24,6 +24,11 @@ class DumbCrawlerSpider(scrapy.Spider):
     # This ensures we capture 404, 500, etc. pages
     handle_httpstatus_all = True
 
+    # Security: Sitemap DoS protection limits
+    SITEMAP_REQUEST_TIMEOUT = 30  # seconds - prevent slowloris attacks
+    SITEMAP_MAX_RECURSION_DEPTH = 5  # levels - prevent infinite recursion
+    SITEMAP_MAX_URLS = 100000  # maximum URLs to extract from sitemaps
+
     # Spider arguments with defaults
     # --mode: single | list | crawl | sitemap
     # --start-urls: comma-separated URLs (for single/list/crawl modes, OR sitemap URLs for sitemap mode)
@@ -98,6 +103,9 @@ class DumbCrawlerSpider(scrapy.Spider):
         # Track visited URLs to avoid duplicates
         self._visited_urls: Set[str] = set()
 
+        # Security: Track sitemap URL extraction count
+        self._sitemap_url_count = 0  # Track total URLs extracted from sitemaps
+
         # Screenshot settings - get output dir from settings
         self._screenshot_enabled = self.js_mode != "off"
         self._screenshot_dir: Optional[str] = None  # Set from settings in start_requests
@@ -119,6 +127,48 @@ class DumbCrawlerSpider(scrapy.Spider):
             return []
         urls = [url.strip() for url in urls_str.split(",")]
         return [url for url in urls if url]
+
+    def _is_private_ip(self, hostname: str) -> bool:
+        """
+        Check if hostname resolves to a private IP address.
+        Returns True if the hostname resolves to a private/internal IP.
+        Used for SSRF protection (prevents DNS rebinding attacks).
+        """
+        import socket
+        import ipaddress
+
+        try:
+            # Resolve hostname to IP address
+            ip_str = socket.gethostbyname(hostname)
+            ip = ipaddress.ip_address(ip_str)
+
+            # Check if IP is private, loopback, or link-local
+            return ip.is_private or ip.is_loopback or ip.is_link_local
+        except Exception as e:
+            self.logger.error(f"Failed to resolve hostname {hostname}: {e}")
+            # Fail closed - treat as private if we can't resolve
+            return True
+
+    def _validate_sitemap_url_security(self, url_string: str) -> tuple:
+        """
+        Validate sitemap URL for security (SSRF protection).
+        Checks both URL format and DNS resolution.
+        Returns (is_valid, error_message)
+        """
+        try:
+            parsed = urlparse(url_string)
+
+            # Must be HTTPS for security
+            if parsed.scheme != 'https':
+                return (False, f"Sitemap URL must use HTTPS: {url_string}")
+
+            # Check if hostname resolves to private IP (DNS rebinding protection)
+            if self._is_private_ip(parsed.hostname):
+                return (False, f"Sitemap URL resolves to private/internal IP address: {url_string}")
+
+            return (True, "")
+        except Exception as e:
+            return (False, f"Invalid sitemap URL: {str(e)}")
 
     def _parse_url_info(self, url: str) -> dict:
         """Extract URL components for scope checking."""
@@ -236,7 +286,17 @@ class DumbCrawlerSpider(scrapy.Spider):
 
         # Handle sitemap index (contains links to other sitemaps)
         if sitemap.type == "sitemapindex":
-            self.logger.info(f"Processing sitemap index: {response.url}")
+            # Security: Check recursion depth to prevent infinite loops
+            current_depth = response.meta.get('sitemap_depth', 0)
+
+            if current_depth >= self.SITEMAP_MAX_RECURSION_DEPTH:
+                self.logger.error(
+                    f"Sitemap recursion depth limit ({self.SITEMAP_MAX_RECURSION_DEPTH}) "
+                    f"reached at {response.url}. Stopping recursion."
+                )
+                return
+
+            self.logger.info(f"Processing sitemap index: {response.url} (depth: {current_depth})")
             sitemap_count = 0
 
             for entry in sitemap_entries:
@@ -247,8 +307,13 @@ class DumbCrawlerSpider(scrapy.Spider):
                 sitemap_count += 1
                 self.logger.info(f"Following nested sitemap [{sitemap_count}]: {loc}")
 
-                # Recursively parse nested sitemaps
-                yield Request(loc, callback=self._parse_sitemap, priority=10)
+                # Recursively parse nested sitemaps with incremented depth
+                yield Request(
+                    loc,
+                    callback=self._parse_sitemap,
+                    priority=10,
+                    meta={'sitemap_depth': current_depth + 1}  # Security: Increment depth
+                )
 
             self.logger.info(f"Sitemap index contains {sitemap_count} sitemaps")
 
@@ -284,9 +349,24 @@ class DumbCrawlerSpider(scrapy.Spider):
                         skipped_duplicate += 1
                         continue
 
+                    # Security: Check if we've hit the URL limit before yielding
+                    if self._sitemap_url_count >= self.SITEMAP_MAX_URLS:
+                        self.logger.error(
+                            f"Sitemap URL limit reached ({self.SITEMAP_MAX_URLS}). "
+                            f"Stopping extraction to prevent resource exhaustion."
+                        )
+                        return
+
                     # Mark as visited
                     self._visited_urls.add(normalized_url)
                     url_count += 1
+                    self._sitemap_url_count += 1
+
+                    # Security: Progress logging every 1000 URLs
+                    if self._sitemap_url_count % 1000 == 0:
+                        self.logger.info(
+                            f"Sitemap progress: {self._sitemap_url_count}/{self.SITEMAP_MAX_URLS} URLs extracted"
+                        )
 
                     # Extract sitemap metadata for logging
                     lastmod = entry.get('lastmod', 'N/A')
@@ -335,8 +415,20 @@ class DumbCrawlerSpider(scrapy.Spider):
         # Handle sitemap mode: parse sitemaps to extract URLs
         if self.crawl_mode == "sitemap":
             self.logger.info(f"Starting sitemap mode with {len(self.start_urls)} sitemap URL(s)")
+            self.logger.info(f"Security limits: timeout={self.SITEMAP_REQUEST_TIMEOUT}s, max_depth={self.SITEMAP_MAX_RECURSION_DEPTH}, max_urls={self.SITEMAP_MAX_URLS}")
+
+            # Security: Configure download timeout for sitemap requests
+            self.custom_settings = {
+                'DOWNLOAD_TIMEOUT': self.SITEMAP_REQUEST_TIMEOUT,
+            }
 
             for sitemap_url in self.start_urls:
+                # Security: Validate sitemap URL before fetching (SSRF + DNS rebinding protection)
+                is_valid, error_msg = self._validate_sitemap_url_security(sitemap_url)
+                if not is_valid:
+                    self.logger.error(f"Sitemap URL failed security validation: {error_msg}")
+                    continue
+
                 self.logger.info(f"Fetching sitemap: {sitemap_url}")
                 # Yield request to parse the sitemap
                 # The _parse_sitemap callback will handle extraction and crawling
@@ -345,7 +437,8 @@ class DumbCrawlerSpider(scrapy.Spider):
                     callback=self._parse_sitemap,
                     errback=self.handle_error,
                     priority=100,  # High priority for sitemap fetching
-                    dont_filter=True
+                    dont_filter=True,
+                    meta={'sitemap_depth': 0}  # Security: Track recursion depth
                 )
 
         # Handle other modes: single, list, crawl
