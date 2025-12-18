@@ -909,6 +909,11 @@ class ApiPipeline:
         if item.get("error"):
             self.stats["pages_errored"] += 1
 
+        # For sitemap mode: update pages_queued with total URLs discovered from sitemap
+        # This enables accurate progress tracking (e.g., "50/227 URLs crawled")
+        if hasattr(spider, '_sitemap_url_count'):
+            self.stats["pages_queued"] = spider._sitemap_url_count
+
         # Send batch if buffer is full
         if len(self.items_buffer) >= self.batch_size:
             self._send_batch(status="running")
@@ -919,6 +924,10 @@ class ApiPipeline:
     def close_spider(self, spider):
         """Send final batch with 'completed' status."""
         spider.logger.info(f"ApiPipeline: Completing crawl job {self.crawl_job_id}")
+
+        # For sitemap mode: ensure final pages_queued count is accurate
+        if hasattr(spider, '_sitemap_url_count'):
+            self.stats["pages_queued"] = spider._sitemap_url_count
 
         # Determine status based on whether we crawled any pages successfully
         # Note: finish_reason is not set yet when close_spider is called
@@ -939,10 +948,27 @@ class ApiPipeline:
 
     def _convert_to_api_format(self, item):
         """Convert pipeline item to API format with all fundamental fields."""
+        # Determine status_flag from status_code
+        status_code = item.get("status_code")
+        if status_code:
+            if 200 <= status_code < 300:
+                status_flag = "ok"
+            elif 300 <= status_code < 400:
+                status_flag = "redirect"
+            elif 400 <= status_code < 500:
+                status_flag = "client_error"
+            elif 500 <= status_code < 600:
+                status_flag = "server_error"
+            else:
+                status_flag = "not_crawled"
+        else:
+            status_flag = "not_crawled"
+
         return {
             # === CORE IDENTIFIERS ===
             "url": item.get("url", ""),
-            "status_code": item.get("status_code"),
+            "status_code": status_code,
+            "status_flag": status_flag,  # Add status_flag for frontend filtering
             "depth": item.get("depth", 0),
             "referrer": item.get("referrer"),
             "crawled_at": item.get("crawled_at"),
