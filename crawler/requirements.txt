@@ -3,6 +3,9 @@
 # Core crawler
 scrapy>=2.7.0
 
+# Compression support (for sitemap parsing with br encoding)
+brotli>=1.2.0
+
 # Playwright integration
 scrapy-playwright>=0.0.40
 playwright>=1.40.0
