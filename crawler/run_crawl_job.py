@@ -209,16 +209,19 @@ def run_crawl_job(
 
         # Determine start URLs and spider arguments based on crawl mode
         if crawl_mode == "sitemap":
-            # Sitemap crawl: fetch URLs from sitemap
-            if not sitemap_url:
-                raise ValueError("sitemap_url is required for sitemap crawl mode")
+            # Sitemap crawl: fetch URLs from sitemap(s)
+            if not sitemap_urls or len(sitemap_urls) == 0:
+                raise ValueError("sitemapUrls is required for sitemap crawl mode")
 
-            start_urls = sitemap_url
+            # Join multiple sitemap URLs as comma-separated string
+            start_urls = ",".join(sitemap_urls)
             spider_mode = 'sitemap'
             effective_max_depth = 0  # Not applicable for sitemap mode
 
             print(f"Starting SITEMAP crawl job: {job_id}")
-            print(f"  Sitemap URL: {sitemap_url}")
+            print(f"  Sitemap URLs ({len(sitemap_urls)}):")
+            for i, url in enumerate(sitemap_urls, 1):
+                print(f"    {i}. {url}")
             print(f"  Domain: {domain}")
             print(f"  Scope: {scope}")
             print(f"  JS Mode: {js_mode}")
@@ -412,7 +415,7 @@ Examples:
     # If domain or project_id not provided, fetch from API
     urls = None
     crawl_mode = "full"
-    sitemap_url = None
+    sitemap_urls = None
 
     if not args.domain or not args.project_id:
         print(f"Fetching job details from API...")
@@ -430,7 +433,12 @@ Examples:
         # Get specific URLs and crawl mode from job details (top-level fields, not in settings)
         urls = job_details.get('urls')
         crawl_mode = job_details.get('crawlMode', 'full')
-        sitemap_url = settings.get('sitemapUrl')
+        # Support both sitemapUrls (array) and legacy sitemapUrl (string)
+        sitemap_urls = settings.get('sitemapUrls')
+        if not sitemap_urls:
+            # Fallback to legacy single sitemapUrl
+            legacy_url = settings.get('sitemapUrl')
+            sitemap_urls = [legacy_url] if legacy_url else None
 
         # Get maxDepth from API settings (smart defaults based on crawl mode)
         max_depth_from_api = settings.get('maxDepth')

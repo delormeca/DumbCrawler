@@ -20,9 +20,9 @@ class DumbCrawlerSpider(scrapy.Spider):
 
     name = "dumbcrawler"
 
-    # Handle ALL HTTP status codes (not just 2xx)
-    # This ensures we capture 404, 500, etc. pages
-    handle_httpstatus_all = True
+    # Handle specific HTTP status codes (errors) while allowing redirects to be followed automatically
+    # This ensures we capture 404, 500, etc. pages, but redirects (301, 302, etc.) are followed to their destination
+    handle_httpstatus_list = [400, 403, 404, 410, 500, 502, 503, 504]
 
     # Security: Sitemap DoS protection limits
     SITEMAP_REQUEST_TIMEOUT = 30  # seconds - prevent slowloris attacks

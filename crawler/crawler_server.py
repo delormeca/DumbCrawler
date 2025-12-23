@@ -419,6 +419,8 @@ class JobWatcher:
         while self.running:
             try:
                 self._process_pending_jobs()
+                # Security: Check for stuck jobs (running >6 hours)
+                self._check_stuck_jobs()
                 # Reset error state on success
                 if self.connection_error_shown:
                     print("[JobWatcher] Connection restored - resuming normal operation")
@@ -483,6 +485,50 @@ class JobWatcher:
             if "error" in result:
                 print(f"Failed to spawn {job_id}: {result['error']}")
 
+    def _check_stuck_jobs(self):
+        """
+        Check for jobs stuck in 'running' state for too long (6+ hours).
+        Security: Prevents resource leaks from crashed crawlers that didn't update status.
+        """
+        try:
+            from datetime import timedelta
+
+            # Get jobs that have been running for more than 6 hours
+            response = self.supabase.table('crawl_jobs') \
+                .select('id, started_at') \
+                .eq('status', 'running') \
+                .execute()
+
+            if not response.data:
+                return
+
+            timeout_threshold = datetime.now(timezone.utc) - timedelta(hours=6)
+
+            for job in response.data:
+                if not job.get('started_at'):
+                    continue
+
+                # Parse started_at timestamp
+                started_at_str = job['started_at'].replace('Z', '+00:00')
+                started_at = datetime.fromisoformat(started_at_str)
+
+                # Check if job has been running for too long
+                if started_at < timeout_threshold:
+                    job_id = job['id']
+                    hours_running = (datetime.now(timezone.utc) - started_at).total_seconds() / 3600
+
+                    print(f"[TIMEOUT] Job {job_id} stuck in 'running' for {hours_running:.1f} hours, marking as failed")
+
+                    # Mark job as failed with timeout error
+                    self.supabase.table('crawl_jobs').update({
+                        'status': 'failed',
+                        'completed_at': datetime.now(timezone.utc).isoformat(),
+                        'error_message': f'Job timeout: No updates for {hours_running:.1f} hours (threshold: 6 hours)'
+                    }).eq('id', job_id).execute()
+
+        except Exception as e:
+            print(f"[ERROR] Failed to check stuck jobs: {e}")
+
 
 class CrawlerAPIHandler(BaseHTTPRequestHandler):
     """HTTP request handler for crawler API."""
@@ -490,10 +536,26 @@ class CrawlerAPIHandler(BaseHTTPRequestHandler):
     process_manager: ProcessManager = None
     api_url: str = None
     api_key: str = None  # API key for authentication
+    allowed_origins: list = []  # Allowed CORS origins
 
     def log_message(self, format, *args):
         """Custom log format."""
         print(f"[API] {args[0]}")
+
+    def _set_cors_headers(self):
+        """Set CORS headers based on allowed origins."""
+        origin = self.headers.get('Origin', '')
+
+        # If origin is in allowed list, set CORS header
+        if origin in self.allowed_origins:
+            self.send_header('Access-Control-Allow-Origin', origin)
+        # For backward compatibility, allow if no origins configured
+        elif not self.allowed_origins:
+            self.send_header('Access-Control-Allow-Origin', '*')
+        # Otherwise, don't set CORS header (browser will block)
+
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
 
     def _check_auth(self) -> bool:
         """Check if request has valid API key. Returns True if authenticated."""
@@ -512,7 +574,16 @@ class CrawlerAPIHandler(BaseHTTPRequestHandler):
         return False
 
     def _send_auth_error(self):
-        """Send 401 Unauthorized response."""
+        """Send 401 Unauthorized response and log the failure."""
+        # Security: Log authentication failures for audit trail
+        client_ip = self.client_address[0]
+        endpoint = self.path
+        auth_header = self.headers.get('Authorization', '')
+        # Only log first 8 chars of token for security (avoid logging full token)
+        token_preview = auth_header[7:15] if len(auth_header) > 7 else 'missing'
+
+        print(f"[AUTH FAIL] IP: {client_ip} | Endpoint: {endpoint} | Token: {token_preview}... | Time: {datetime.now(timezone.utc).isoformat()}")
+
         self._send_json({
             "error": "Unauthorized",
             "message": "Valid API key required. Use: Authorization: Bearer YOUR_API_KEY"
@@ -522,7 +593,7 @@ class CrawlerAPIHandler(BaseHTTPRequestHandler):
         """Send JSON response."""
         self.send_response(status)
         self.send_header('Content-Type', 'application/json')
-        self.send_header('Access-Control-Allow-Origin', '*')
+        self._set_cors_headers()
         self.end_headers()
         self.wfile.write(json.dumps(data).encode())
 
@@ -537,9 +608,7 @@ class CrawlerAPIHandler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         """Handle CORS preflight."""
         self.send_response(200)
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+        self._set_cors_headers()
         self.end_headers()
 
     def do_GET(self):
@@ -659,6 +728,12 @@ def main():
         default=os.environ.get("API_KEY", ""),
         help="API key for authentication (optional, from API_KEY env var)"
     )
+    parser.add_argument(
+        "--allowed-origins",
+        type=str,
+        default=os.environ.get("ALLOWED_ORIGINS", "https://delorme-os2.tommy-260.workers.dev"),
+        help="Comma-separated list of allowed CORS origins (from ALLOWED_ORIGINS env var)"
+    )
 
     args = parser.parse_args()
 
@@ -684,14 +759,27 @@ def main():
         print("Error: Supabase URL and key are required.")
         sys.exit(1)
 
+    # Security: Validate API key strength if provided
+    if args.api_key and len(args.api_key) < 32:
+        print("=" * 60)
+        print("ERROR: API_KEY must be at least 32 characters for security")
+        print(f"Current length: {len(args.api_key)} characters")
+        print("Generate a strong API key with: openssl rand -base64 32")
+        print("=" * 60)
+        sys.exit(1)
+
     # Initialize components
     supabase = create_client(args.supabase_url, args.supabase_key)
     process_manager = ProcessManager()
+
+    # Parse allowed origins for CORS
+    allowed_origins = [origin.strip() for origin in args.allowed_origins.split(',')]
 
     # Set class variables for handler
     CrawlerAPIHandler.process_manager = process_manager
     CrawlerAPIHandler.api_url = args.api_url
     CrawlerAPIHandler.api_key = args.api_key if args.api_key else None
+    CrawlerAPIHandler.allowed_origins = allowed_origins
 
     # Start job watcher if enabled
     if not args.no_watcher:
@@ -711,7 +799,7 @@ def main():
     print(f"Crawler Server started on port {args.port}")
     print(f"API URL: {args.api_url}")
     if args.api_key:
-        print(f"🔐 Authentication: ENABLED (API key required)")
+        print(f"🔐 Authentication: ENABLED (API key length: {len(args.api_key)} chars)")
     else:
         print(f"⚠️  Authentication: DISABLED (no API key configured)")
     print(f"=" * 60)
