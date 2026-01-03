@@ -165,7 +165,7 @@ def run_crawl_job(
     log_level: str = "INFO",
     urls: list = None,  # Specific URLs to crawl (for targeted re-crawls)
     crawl_mode: str = "full",  # "full" | "urls_only" | "sitemap"
-    sitemap_url: str = None,  # Sitemap URL for sitemap mode
+    sitemap_urls: list = None,  # Sitemap URLs for sitemap mode (can be multiple)
     results_endpoint: str = "/api/crawl/results",  # API endpoint to send results to
 ):
     """
