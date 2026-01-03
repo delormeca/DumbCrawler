@@ -166,6 +166,7 @@ def run_crawl_job(
     urls: list = None,  # Specific URLs to crawl (for targeted re-crawls)
     crawl_mode: str = "full",  # "full" | "urls_only" | "sitemap"
     sitemap_url: str = None,  # Sitemap URL for sitemap mode
+    results_endpoint: str = "/api/crawl/results",  # API endpoint to send results to
 ):
     """
     Run a crawl job with API integration.
@@ -188,8 +189,8 @@ def run_crawl_job(
         # Override settings
         settings.set('LOG_LEVEL', log_level)
 
-        # API settings for ApiPipeline
-        settings.set('API_URL', f"{api_url.rstrip('/')}/api/crawl/results")
+        # API settings for ApiPipeline (use dynamic results endpoint)
+        settings.set('API_URL', f"{api_url.rstrip('/')}{results_endpoint}")
         settings.set('CRAWL_JOB_ID', job_id)
         settings.set('PROJECT_ID', project_id)
         settings.set('API_KEY', job_id)  # Using job_id as API key for MVP
@@ -440,6 +441,9 @@ Examples:
             legacy_url = settings.get('sitemapUrl')
             sitemap_urls = [legacy_url] if legacy_url else None
 
+        # Get results endpoint (embedder uses /api/embedder/results, crawler uses /api/crawl/results)
+        results_endpoint = settings.get('resultsEndpoint', '/api/crawl/results')
+
         # Get maxDepth from API settings (smart defaults based on crawl mode)
         max_depth_from_api = settings.get('maxDepth')
     else:
@@ -449,6 +453,7 @@ Examples:
         js_mode = args.js_mode or 'off'
         max_pages = args.max_pages or 500
         max_depth_from_api = None
+        results_endpoint = '/api/crawl/results'  # Default when not fetching from API
 
     # Determine effective max_depth
     # Priority: command-line arg > API setting > smart default based on mode
@@ -487,6 +492,7 @@ Examples:
         urls=urls,
         crawl_mode=crawl_mode,
         sitemap_url=sitemap_url,
+        results_endpoint=results_endpoint,
     )
 
 
