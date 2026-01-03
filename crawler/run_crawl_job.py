@@ -491,7 +491,7 @@ Examples:
         log_level=args.log_level,
         urls=urls,
         crawl_mode=crawl_mode,
-        sitemap_url=sitemap_url,
+        sitemap_url=sitemap_urls,
         results_endpoint=results_endpoint,
     )
 
